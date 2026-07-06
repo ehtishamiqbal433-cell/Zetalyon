@@ -11,6 +11,8 @@ import { ThreatMapView } from './components/ThreatMapView.tsx';
 import { SystemConfigView } from './components/SystemConfigView.tsx';
 import { LicenseView } from './components/LicenseView.tsx';
 import { CodeHardeningView } from './components/CodeHardeningView.tsx';
+import { CyberRangeSandbox } from './components/CyberRangeSandbox.tsx';
+import { VertexAIPipelineView } from './components/VertexAIPipelineView.tsx';
 import { RoutePaths } from './types.ts';
 
 const App: React.FC = () => {
@@ -25,6 +27,8 @@ const App: React.FC = () => {
           <Route path={RoutePaths.DOCUMENTATION} element={<Documentation />} />
           <Route path={RoutePaths.BIOMETRICS} element={<BiometricsView />} />
           <Route path={RoutePaths.THREAT_MAP} element={<ThreatMapView />} />
+          <Route path={RoutePaths.VERTEX_PIPELINE} element={<VertexAIPipelineView />} />
+          <Route path={RoutePaths.CYBER_RANGE} element={<CyberRangeSandbox />} />
           <Route path={RoutePaths.SETTINGS} element={<SystemConfigView />} />
           <Route path={RoutePaths.CODE_HARDENING} element={<CodeHardeningView />} />
           <Route path={RoutePaths.LICENSE} element={<LicenseView />} />
