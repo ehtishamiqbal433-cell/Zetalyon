@@ -1,8 +1,14 @@
 import React from 'react';
-import { Book, Shield, Cpu, Network, Zap, Lock, EyeOff, Layers, Bot, Database, Activity, Fingerprint, Hash, TrendingUp, UserCircle, Server, Mouse, Keyboard, Smartphone, Cloud, Crosshair, AlertTriangle, Download, Sliders } from 'lucide-react';
+import { Book, Shield, Cpu, Network, Zap, Lock, EyeOff, Layers, Bot, Database, Activity, Fingerprint, Hash, TrendingUp, UserCircle, Server, Mouse, Keyboard, Smartphone, Cloud, Crosshair, AlertTriangle, Download, Sliders, FileCode } from 'lucide-react';
 
 export const Documentation: React.FC = () => {
   const features = [
+    {
+      icon: <FileCode className="text-green-400" size={24} />,
+      title: 'DevSecOps Code Hardening & Obfuscation',
+      description: 'Multi-stage Dockerfile architecture utilizing distroless containers. Employs esbuild and javascript-obfuscator to mangle, minify, and encrypt source code, preventing static extraction and reverse engineering.',
+      technical: 'Strict environmental variable isolation via Google Cloud Secret Manager. No hardcoded secrets.'
+    },
     {
       icon: <Sliders className="text-blue-400" size={24} />,
       title: 'Granular Micro-Policy Rule Configuration',
