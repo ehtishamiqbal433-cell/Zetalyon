@@ -1,0 +1,173 @@
+import React from 'react';
+import { Book, Shield, Cpu, Network, Zap, Lock, EyeOff, Layers, Bot, Database, Activity, Fingerprint, Hash, TrendingUp, UserCircle, Server, Mouse, Keyboard, Smartphone, Cloud, Crosshair, AlertTriangle, Download, Sliders } from 'lucide-react';
+
+export const Documentation: React.FC = () => {
+  const features = [
+    {
+      icon: <Sliders className="text-blue-400" size={24} />,
+      title: 'Granular Micro-Policy Rule Configuration',
+      description: 'A dynamic multidimensional dashboard to adjust Biometric Drift Tolerance, Threat Intelligence Multipliers, and MFA Strictness. Includes a Visual Policy Boundary Simulator (Shadow Mode) to model FAR/FRR trade-offs in real-time.',
+      technical: 'React state debouncing syncs asynchronously with Express.js middleware via Firestore (`/infrastructure/micro_policies`) without blocking the main UI thread.'
+    },
+    {
+      icon: <AlertTriangle className="text-yellow-400" size={24} />,
+      title: 'Live "Attack Injection" Cyber Range (Chaos Mode)',
+      description: 'A dedicated Adversarial Lab Control Panel allowing researchers to toggle simulated attack modes mid-session (e.g., Cookie Replay, Headless Web-Driver) to force backend trust collapses and test defensive responses.',
+      technical: 'Intentionally alters outbound telemetry streams (dropping timestamps, injecting static arrays) to trigger Vertex AI anomaly detection.'
+    },
+    {
+      icon: <EyeOff className="text-red-400" size={24} />,
+      title: 'Real-Time "Deception Morphing" Visualizer',
+      description: 'When the user\'s calculated risk score crosses the 0.75 threshold, the app secretly shifts from the production environment to the Generative Honey-Pot UI, visually highlighting synthetic data tables to contain the threat.',
+      technical: 'React state-driven UI morphing based on global trust score thresholds.'
+    },
+    {
+      icon: <Download className="text-blue-400" size={24} />,
+      title: 'Complete "Forensic Evidence Package" Exporter',
+      description: 'Compiles an incident response bundle for compromised sessions, including raw telemetry arrays, live threat indicators, and multi-dimensional risk matrices.',
+      technical: 'Generates a pre-formatted JSON/CSV bundle ready for Wireshark, Splunk, or Jupyter Notebooks.'
+    },
+    {
+      icon: <Activity className="text-purple-400" size={24} />,
+      title: 'Explainable AI (XAI) Feature Feedback Engine',
+      description: 'Expands the "Mimic the Bot" mode to return structural biometric evaluation matrices (Mahalanobis distance, velocity coefficient variance, top failed features) rather than simple booleans.',
+      technical: 'Provides empirical validation of the gap between human mimicry and true software macros.'
+    },
+    {
+      icon: <Crosshair className="text-red-400" size={24} />,
+      title: 'Dynamic Compound Risk Scoring & Live Threat Feeds',
+      description: 'Fuses local biometric telemetry with asynchronous external threat queries (IP Reputation, OWASP AST10). If the compound risk score exceeds 0.80, the session is instantly redirected to a synthetic honeypot.',
+      technical: 'Node.js/Express middleware with in-memory caching (node-cache) and strict 500ms timeouts to maintain <20ms execution.'
+    },
+    {
+      icon: <Cloud className="text-blue-400" size={24} />,
+      title: 'Serverless Cloud Run Architecture & Edge Routing',
+      description: 'Independent microservices (`zta-public-stream` and `zta-private-research`) behind a Global HTTP(S) Load Balancer. Path-based routing and native Identity-Aware Proxy (IAP) drop unauthorized traffic at the Google edge, requiring zero code-level middleware.',
+      technical: 'Deployed via gcloud CLI using Serverless NEGs and URL Maps.'
+    },
+    {
+      icon: <Cpu className="text-purple-400" size={24} />,
+      title: 'Multi-Platform Unified Telemetry Engine',
+      description: 'A production-grade Flutter/Dart engine wrapper handles real-time continuous biometric telemetry across iOS, Android, Windows, macOS, and Linux from a single codebase without degrading UI frames (maintains 60 FPS).',
+      technical: 'Uses Dart Isolates/Workers and thread-safe local memory ring buffers.'
+    },
+    {
+      icon: <TrendingUp className="text-green-400" size={24} />,
+      title: 'High-Value Executive Analytics',
+      description: 'Provides a Financial Risk Reduction Dashboard, Anonymized Team Leaderboards, Automated Framework Compliance Tracker (NIST, NIS2, ISO 27001), and a Visual MITRE ATT&CK Mapping Canvas.',
+      technical: 'Aggregates telemetry into business-level metrics and compliance logs via Firestore.'
+    },
+    {
+      icon: <UserCircle className="text-blue-400" size={24} />,
+      title: 'End-User Gamification & Interactive Portal',
+      description: 'Features a Live Behavioral Health Score, Gamified Micro-Challenges, and an Instant Verification Helper (drag-and-drop widget for real-time sandbox analysis).',
+      technical: 'Frontend React components interfacing with Vertex AI online prediction pipelines.'
+    },
+    {
+      icon: <Server className="text-purple-400" size={24} />,
+      title: 'Network-Layer Decoupled Quarantining',
+      description: 'If a session\'s continuous trust score drops to zero, a Google Cloud Function automatically isolates that user\'s microservice container environment into a read-only VPC segment without dropping the active socket.',
+      technical: 'Event-driven architecture triggering Kubernetes/Istio network policies.'
+    },
+    {
+      icon: <Lock className="text-zeta-safe" size={24} />,
+      title: 'Post-Quantum Session Key Rotation',
+      description: 'Secures the session token architecture to sign and secure JWTs and identity headers using post-quantum lattice-based algorithms (ML-DSA or Falcon). Keys rotate dynamically every 5 minutes.',
+      technical: 'Replaces standard RSA/ECC with NIST-approved PQC algorithms for session integrity.'
+    },
+    {
+      icon: <Activity className="text-yellow-400" size={24} />,
+      title: 'Continuous Step-Up Micro-Challenges',
+      description: 'If the backend biometric telemetry engine registers a minor drift in typical keyboard behavior, the app seamlessly triggers an inline, frictionless check (e.g., FIDO2 handshake) without interrupting the workspace.',
+      technical: 'WebAuthn API integration triggered by real-time Kalman filter deviations.'
+    },
+    {
+      icon: <Bot className="text-red-400" size={24} />,
+      title: 'Invisible LLM Scraper Traps & Shadow AI Discovery',
+      description: 'Deploys AI Prompts Canaries to detect unauthorized LLM scraping and identifies Shadow AI integrations attempting to exfiltrate data.',
+      technical: 'Injects zero-width cryptographic watermarks into text payloads.'
+    },
+    {
+      icon: <Smartphone className="text-blue-400" size={24} />,
+      title: 'Cross-Device Proximity Authorization',
+      description: 'Links the user\'s active desktop application session with their verified mobile phone via BLE or Cloud Sync. If the phone moves out of range, the desktop session locks down.',
+      technical: 'Cross-references mobile authenticator state with desktop biometric telemetry.'
+    },
+    {
+      icon: <Mouse className="text-indigo-400" size={24} />,
+      title: 'Peripheral Interface Analysis',
+      description: 'Monitors specific mechanical hardware changes, such as switching from a built-in laptop trackpad to an external gaming mouse, updating the baseline model instantly to prevent false positives.',
+      technical: 'Analyzes polling rates (Hz) and precision (DPI) from raw input event streams.'
+    },
+    {
+      icon: <Keyboard className="text-pink-400" size={24} />,
+      title: 'Keystroke Flight-Time Matrix Modeling',
+      description: 'Expands keystroke tracking to map not just key-down duration, but flight-time (the split-second transition delay between typing specific pairs of letters).',
+      technical: 'Builds a unique physical typing profile that software macros cannot recreate.'
+    },
+    {
+      icon: <EyeOff className="text-gray-400" size={24} />,
+      title: 'Focus Loss & Clipboard Exfiltration Guardian',
+      description: 'Monitors when the application window loses focus or when large amounts of data are pasted. If focus switches to a known unauthorized background app, the session trust score drops immediately.',
+      technical: 'Hooks into window lifecycle events and clipboard API with heuristic analysis.'
+    },
+    {
+      icon: <Hash className="text-zeta-accent" size={24} />,
+      title: 'Privacy-Preserving Local Data Hashing',
+      description: 'Hashes and normalizes all raw coordinate and acceleration arrays locally on the device using light cryptographic operations before streaming them over the network.',
+      technical: 'Ensures no raw user muscle or input history is exposed in plain text.'
+    },
+    {
+      icon: <Layers className="text-green-400" size={24} />,
+      title: 'Behavioral Identity Roaming Profiles & Zero-Trust Handover',
+      description: 'Allows the machine learning baseline model to sync securely across platforms. Enables seamless session transfers between devices by validating the user\'s behavioral identity signature continuously during the handover.',
+      technical: 'Firestore-backed profile synchronization with cross-platform normalization.'
+    }
+  ];
+
+  return (
+    <div className="max-w-5xl mx-auto space-y-8 animate-in fade-in duration-500 pb-12">
+      <header className="border-b border-gray-800 pb-6">
+        <h2 className="text-3xl font-bold text-white tracking-tight flex items-center">
+          <Book className="mr-3 text-zeta-accent" size={32} />
+          Zetalyon Architecture Documentation
+        </h2>
+        <p className="text-gray-400 mt-2 max-w-3xl">
+          Zetalyon is a perfect shield application. It employs a zero-trust, continuous authentication model powered by Vertex AI. Below are the advanced defensive modules that make exploitation mathematically improbable.
+        </p>
+      </header>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        {features.map((feature, idx) => (
+          <div key={idx} className="bg-zeta-800 border border-gray-700 rounded-xl p-6 hover:border-zeta-accent/50 transition-colors group">
+            <div className="flex items-start mb-4">
+              <div className="p-3 bg-zeta-900 rounded-lg border border-gray-700 group-hover:border-gray-500 transition-colors">
+                {feature.icon}
+              </div>
+              <h3 className="ml-4 text-lg font-semibold text-white leading-tight pt-1">
+                {feature.title}
+              </h3>
+            </div>
+            <p className="text-gray-300 text-sm leading-relaxed mb-4">
+              {feature.description}
+            </p>
+            <div className="bg-zeta-900 p-3 rounded border border-gray-800">
+              <span className="text-xs font-mono text-gray-500 uppercase block mb-1">Technical Implementation</span>
+              <p className="text-xs font-mono text-gray-400">
+                {feature.technical}
+              </p>
+            </div>
+          </div>
+        ))}
+      </div>
+      
+      <div className="mt-12 p-6 bg-gradient-to-r from-zeta-900 to-zeta-800 border border-zeta-accent/30 rounded-xl text-center">
+        <Shield className="mx-auto text-zeta-safe mb-4" size={48} />
+        <h3 className="text-xl font-bold text-white mb-2">Impenetrable by Design</h3>
+        <p className="text-gray-400 max-w-2xl mx-auto text-sm">
+          By combining continuous behavioral biometrics, PQC session binding, Zero-Knowledge Proofs, and Vertex AI online predictions, Zetalyon shifts the asymmetry of cyber warfare. Attackers must perfectly simulate human physiology while navigating a constantly shifting, quantum-secured topology.
+        </p>
+      </div>
+    </div>
+  );
+};
