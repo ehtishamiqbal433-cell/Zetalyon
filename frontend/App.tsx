@@ -10,6 +10,7 @@ import { BiometricsView } from './components/BiometricsView.tsx';
 import { ThreatMapView } from './components/ThreatMapView.tsx';
 import { SystemConfigView } from './components/SystemConfigView.tsx';
 import { LicenseView } from './components/LicenseView.tsx';
+import { CodeHardeningView } from './components/CodeHardeningView.tsx';
 import { RoutePaths } from './types.ts';
 
 const App: React.FC = () => {
@@ -25,6 +26,7 @@ const App: React.FC = () => {
           <Route path={RoutePaths.BIOMETRICS} element={<BiometricsView />} />
           <Route path={RoutePaths.THREAT_MAP} element={<ThreatMapView />} />
           <Route path={RoutePaths.SETTINGS} element={<SystemConfigView />} />
+          <Route path={RoutePaths.CODE_HARDENING} element={<CodeHardeningView />} />
           <Route path={RoutePaths.LICENSE} element={<LicenseView />} />
           <Route path="*" element={<Navigate to={RoutePaths.DASHBOARD} replace />} />
         </Routes>
