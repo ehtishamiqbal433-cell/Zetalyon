@@ -14,7 +14,10 @@ import {
   VertexPrediction, IPSwarm, TTPEvent, EntropyData, ZKPCircuit, DOMHashEvent,
   FinancialMetric, MitreTactic, AttackTimelineEvent, LeaderboardEntry, SystemResource, ComplianceLog,
   PeripheralData, ProximityData, GamificationProfile, ThreatFeedIndicator, CompoundRiskData,
-  XAIFeedback, MicroPolicyConfig, PolicySimulationData
+  XAIFeedback, MicroPolicyConfig, PolicySimulationData, PredictiveRiskData, SandboxLeaderboardEntry,
+  VertexClusterPoint, VertexRetrainingEvent, VertexIngestionMetric, ActiveProcessData,
+  SandboxNode, SandboxConnection, PacketSimulationResult, FirewallRule, ForensicEvent, BlastRadiusNode,
+  TopologyValidationResult
 } from '../types.ts';
 
 class SimulationService {
@@ -24,8 +27,10 @@ class SimulationService {
   private domEventIdCounter = 0;
   private complianceIdCounter = 0;
   private threatFeedIdCounter = 0;
+  private retrainingEventIdCounter = 0;
   private activeChaosAttacks: string[] = [];
   private attackPhase = 0;
+  private previousEma = 0.1;
 
   // Chaos Engineering Hooks
   setChaosAttacks(attacks: string[]) {
@@ -63,12 +68,13 @@ class SimulationService {
     this.eventIdCounter++;
     const types: SecurityEvent['type'][] = [
       'ANALYSIS', 'THREAT_BLOCKED', 'ATTESTATION', 'SYSTEM', 'SESSION_INVALIDATED', 
-      'FOCUS_LOSS', 'PERIPHERAL_SHIFT', 'PROXIMITY_ALERT', 'SESSION_HANDOVER'
+      'FOCUS_LOSS', 'PERIPHERAL_SHIFT', 'PROXIMITY_ALERT', 'SESSION_HANDOVER', 'PROCESS_HOOK'
     ];
     const modules = [
       'Vertex AI Pipeline', 'Kalman Filter', 'Polymorphic Router', 'Micro-Friction Engine',
       'FIDO2 Interceptor', 'Generative AI Canary', 'PQC Session Binder', 'Token-Theft Invalidator',
-      'LLM Scraper Trap', 'Clipboard Guardian', 'BLE Proximity Sync', 'Compound Risk Engine'
+      'LLM Scraper Trap', 'Clipboard Guardian', 'BLE Proximity Sync', 'Compound Risk Engine',
+      'Process Discovery Layer'
     ];
     
     const type = types[Math.floor(Math.random() * types.length)];
@@ -112,6 +118,10 @@ class SimulationService {
       case 'SESSION_HANDOVER':
         severity = 'info';
         message = `Zero-Trust Handover: Mobile -> Desktop. Behavioral identity roaming profile synced.`;
+        break;
+      case 'PROCESS_HOOK':
+        severity = 'info';
+        message = `Target process 'Discord.exe' discovered. Telemetry hook attached successfully.`;
         break;
     }
 
@@ -561,6 +571,466 @@ class SimulationService {
       });
     }
     return data;
+  }
+
+  // Adaptive Predictive Risk Engine
+  generatePredictiveRiskData(count: number): PredictiveRiskData[] {
+    const data: PredictiveRiskData[] = [];
+    const now = new Date();
+    
+    for (let i = count; i >= 0; i--) {
+      const time = new Date(now.getTime() - i * 2000);
+      
+      // 1. Raw Anomaly (0.0 to 1.0)
+      const rawAnomaly = Math.random() * 0.3 + (Math.random() > 0.9 ? 0.5 : 0); // Occasional spikes
+      
+      // 2. Temporal Decay & Velocity Tracking (EMA)
+      // Alpha = 2 / (N + 1). Let's use N=5 for fast momentum tracking.
+      const alpha = 2 / (5 + 1);
+      const emaMomentum = (rawAnomaly * alpha) + (this.previousEma * (1 - alpha));
+      this.previousEma = emaMomentum;
+
+      // 3. Bayesian Inference Threat-Weighting (Prior Probability)
+      // Simulate a live threat feed altering the prior probability
+      const bayesianPrior = Math.random() > 0.8 ? 0.6 : 0.1; // 60% prior if under attack, 10% normally
+
+      // 4. Hardware-Contextual Baseline Weighting (Environmental Anchor)
+      // 1.0 = perfect match, 0.0 = completely new hardware
+      const hardwareAnchor = Math.random() > 0.9 ? 0.2 : 0.95; 
+
+      // Final Compound Equation
+      // If hardware matches (anchor ~ 1.0), reduce the impact of the raw anomaly (assume fatigue).
+      // If hardware differs (anchor ~ 0.0), amplify the anomaly.
+      // Then apply Bayesian prior to shift the final distribution.
+      
+      const hardwareAdjustedAnomaly = emaMomentum * (1 + (1 - hardwareAnchor));
+      
+      // Simplified Bayesian update: Posterior ~ Likelihood * Prior
+      // We treat the hardwareAdjustedAnomaly as the likelihood of an attack given the telemetry.
+      const finalPredictiveRisk = Math.min(1.0, hardwareAdjustedAnomaly * (1 + bayesianPrior));
+
+      data.push({
+        time: time.toLocaleTimeString([], { hour12: false, minute: '2-digit', second: '2-digit' }),
+        rawAnomaly,
+        emaMomentum,
+        bayesianPrior,
+        hardwareAnchor,
+        finalPredictiveRisk
+      });
+    }
+    return data;
+  }
+
+  generateSandboxLeaderboard(): SandboxLeaderboardEntry[] {
+    return [
+      { rank: 1, alias: 'Arch_Mage', efficiencyScore: 98.5, cost: 1200, badge: 'Zero Trust Overlord' },
+      { rank: 2, alias: 'Net_Weaver', efficiencyScore: 95.2, cost: 1450, badge: 'Perimeter Master' },
+      { rank: 3, alias: 'Byte_Knight', efficiencyScore: 91.0, cost: 1100, badge: 'Cost Optimizer' },
+      { rank: 4, alias: 'Sys_Admin_X', efficiencyScore: 88.4, cost: 1800, badge: 'Defense in Depth' },
+      { rank: 5, alias: 'Ghost_Protocol', efficiencyScore: 85.1, cost: 1300, badge: 'Stealth Architect' },
+    ];
+  }
+
+  // Vertex AI Context Pipeline Simulation
+  generateVertexClusterPoints(count: number): VertexClusterPoint[] {
+    const points: VertexClusterPoint[] = [];
+    for (let i = 0; i < count; i++) {
+      const rand = Math.random();
+      if (rand < 0.7) {
+        // Core Cluster (Dense, Center)
+        points.push({
+          x: 40 + Math.random() * 20,
+          y: 40 + Math.random() * 20,
+          z: 40 + Math.random() * 20,
+          cluster: 'Core'
+        });
+      } else if (rand < 0.9) {
+        // Drift Cluster (Spread, slightly off-center)
+        points.push({
+          x: 20 + Math.random() * 60,
+          y: 20 + Math.random() * 60,
+          z: 20 + Math.random() * 60,
+          cluster: 'Drift'
+        });
+      } else {
+        // Outlier Cluster (Sparse, far off)
+        points.push({
+          x: Math.random() > 0.5 ? Math.random() * 20 : 80 + Math.random() * 20,
+          y: Math.random() > 0.5 ? Math.random() * 20 : 80 + Math.random() * 20,
+          z: Math.random() > 0.5 ? Math.random() * 20 : 80 + Math.random() * 20,
+          cluster: 'Outlier'
+        });
+      }
+    }
+    return points;
+  }
+
+  generateVertexRetrainingEvents(count: number): VertexRetrainingEvent[] {
+    return Array.from({ length: count }, () => {
+      this.retrainingEventIdCounter++;
+      const isBaseline = Math.random() > 0.3;
+      return {
+        id: `RET-${this.retrainingEventIdCounter.toString().padStart(5, '0')}`,
+        timestamp: new Date(),
+        type: isBaseline ? 'Baseline Adjusted' : 'Adversarial Tagged',
+        details: isBaseline 
+          ? 'User shifted into Drift Cluster over 5 verified sessions. Profile updated.' 
+          : 'Consistent Outlier Cluster mapping + OTX Threat Match. Exported to forensics.',
+        userId: `usr_${Math.random().toString(36).substr(2, 6)}`
+      };
+    });
+  }
+
+  generateVertexIngestionMetrics(count: number): VertexIngestionMetric[] {
+    const data: VertexIngestionMetric[] = [];
+    const now = new Date();
+    for (let i = count; i >= 0; i--) {
+      const time = new Date(now.getTime() - i * 1000);
+      data.push({
+        time: time.toLocaleTimeString([], { hour12: false, minute: '2-digit', second: '2-digit' }),
+        latencyMs: 15 + Math.random() * 25, // Under 50ms
+        throughput: 4500 + Math.random() * 1500
+      });
+    }
+    return data;
+  }
+
+  // Active Process Monitoring Simulation
+  generateActiveProcessData(): ActiveProcessData[] {
+    const processes: ActiveProcessData[] = [
+      { processName: 'Discord.exe', pid: 14520, platform: 'Windows', isApprovedTarget: true, hookStatus: 'Hooked' },
+      { processName: 'Steam.exe', pid: 8924, platform: 'Windows', isApprovedTarget: true, hookStatus: 'Scanning' },
+      { processName: 'com.epicgames.portal', pid: 402, platform: 'Android', isApprovedTarget: true, hookStatus: 'Hooked' },
+      { processName: 'Minecraft.app', pid: 1102, platform: 'macOS', isApprovedTarget: true, hookStatus: 'Detached' }
+    ];
+    
+    // Randomly select 1 or 2 active processes
+    const numActive = Math.floor(Math.random() * 2) + 1;
+    const shuffled = processes.sort(() => 0.5 - Math.random());
+    return shuffled.slice(0, numActive);
+  }
+
+  // Deterministic Routing & Packet-Filtering Simulator
+  validatePacketFlow(attackType: string, nodes: SandboxNode[], connections: SandboxConnection[]): PacketSimulationResult {
+    // 1. Find entry point (Laptop or IoT)
+    const entryNodes = nodes.filter(n => n.type === 'Laptop' || n.type === 'IoT');
+    if (entryNodes.length === 0) {
+      return { success: true, message: 'No entry point found. Attack mitigated.' };
+    }
+
+    // 2. Define attack payload characteristics based on type
+    let payloadPort = '80';
+    let payloadProtocol = 'TCP';
+    let targetType = 'Server';
+
+    switch (attackType) {
+      case 'SQL Injection':
+        payloadPort = '443';
+        targetType = 'DB';
+        break;
+      case 'Distributed Denial of Service (DDoS)':
+        payloadProtocol = 'UDP';
+        targetType = 'Server';
+        break;
+      case 'Lateral Movement':
+        payloadPort = '22'; // SSH
+        targetType = 'Server';
+        break;
+      case 'Credential Stuffing':
+        payloadPort = '443';
+        targetType = 'ZTAGateway';
+        break;
+    }
+
+    // 3. Traverse the graph (BFS)
+    let queue: string[] = [entryNodes[0].id];
+    let visited: Set<string> = new Set([entryNodes[0].id]);
+
+    while (queue.length > 0) {
+      const currentId = queue.shift()!;
+      const currentNode = nodes.find(n => n.id === currentId);
+      
+      if (!currentNode) continue;
+
+      // Check if we reached the target
+      if (currentNode.type === targetType) {
+        return { 
+          success: false, 
+          message: `Breach successful. Payload reached ${targetType}.`,
+          failedAtNodeId: currentId
+        };
+      }
+
+      // Evaluate Firewall Rules deterministically
+      if (currentNode.type === 'Firewall') {
+        let packetAllowed = false;
+        
+        // Default deny if no rules
+        if (!currentNode.config.firewallRules || currentNode.config.firewallRules.length === 0) {
+           return { success: true, message: 'Firewall default deny triggered. Attack mitigated.', failedAtNodeId: currentId };
+        }
+
+        for (const rule of currentNode.config.firewallRules) {
+          // Simple deterministic matching
+          const portMatch = rule.port === 'ANY' || rule.port === payloadPort;
+          const protocolMatch = rule.protocol === 'ANY' || rule.protocol === payloadProtocol;
+          
+          if (portMatch && protocolMatch) {
+            if (rule.action === 'DENY') {
+              return { 
+                success: true, 
+                message: `Firewall rule DENY matched. Attack mitigated.`,
+                failedAtNodeId: currentId,
+                failedRule: `${rule.action} ${rule.sourceIp} ${rule.destIp} ${rule.port} ${rule.protocol}`
+              };
+            } else if (rule.action === 'ALLOW') {
+              packetAllowed = true;
+              break; // Stop evaluating rules, packet is allowed through this node
+            }
+          }
+        }
+
+        if (!packetAllowed) {
+           return { success: true, message: 'Implicit deny. Attack mitigated.', failedAtNodeId: currentId };
+        }
+      }
+
+      // Evaluate ZTA Gateway
+      if (currentNode.type === 'ZTAGateway') {
+        // ZTA requires specific trust scores or biometric validation
+        // For simulation, we assume ZTA blocks lateral movement (SSH) and DDoS
+        if (attackType === 'Lateral Movement' || attackType === 'Distributed Denial of Service (DDoS)') {
+           return { success: true, message: 'ZTA Gateway blocked unauthorized context. Attack mitigated.', failedAtNodeId: currentId };
+        }
+      }
+
+      // Find neighbors
+      const neighbors = connections
+        .filter(c => c.from === currentId)
+        .map(c => c.to);
+
+      for (const neighborId of neighbors) {
+        if (!visited.has(neighborId)) {
+          visited.add(neighborId);
+          queue.push(neighborId);
+        }
+      }
+    }
+
+    return { success: true, message: 'Attack path exhausted. Target not reached.' };
+  }
+
+  // Mock SHA-256 generator for Chain of Custody
+  private mockSha256(data: string): string {
+    return Array.from({length: 64}, () => Math.floor(Math.random()*16).toString(16)).join('');
+  }
+
+  generateForensicTimeline(): ForensicEvent[] {
+    const events: ForensicEvent[] = [];
+    const now = new Date();
+    let prevHash = "0000000000000000000000000000000000000000000000000000000000000000";
+
+    const rawEvents = [
+      { track: 'Network', title: 'New Connection Established', desc: 'Inbound TCP connection from 185.20.x.x', isCritical: false },
+      { track: 'ThreatIntel', title: 'OTX Pulse Match', desc: 'IP 185.20.x.x matches known Tor Exit Node', isCritical: true },
+      { track: 'Biometric', title: 'Keystroke Anomaly', desc: 'Flight-time variance dropped by 85% (Robotic)', isCritical: true },
+      { track: 'Network', title: 'DNS Lookup', desc: 'Query for internal.db.local', isCritical: false },
+      { track: 'Biometric', title: 'Velocity Spike', desc: 'Mouse acceleration exceeds human limits', isCritical: true },
+      { track: 'Network', title: 'Firewall Drop', desc: 'DENY rule triggered on port 22', isCritical: false },
+      { track: 'ThreatIntel', title: 'MISP Indicator', desc: 'Payload signature matches T1539', isCritical: true },
+      { track: 'Network', title: 'Session Hijack Attempt', desc: 'Valid JWT used from new context', isCritical: true },
+    ];
+
+    rawEvents.forEach((re, i) => {
+      const id = `FEV-${i}`;
+      const hash = this.mockSha256(id + prevHash);
+      events.push({
+        id,
+        timestamp: new Date(now.getTime() - (rawEvents.length - i) * 15000),
+        track: re.track as any,
+        title: re.title,
+        description: re.desc,
+        hash,
+        previousHash: prevHash,
+        relatedEventIds: i > 0 ? [`FEV-${i-1}`] : [],
+        isCritical: re.isCritical
+      });
+      prevHash = hash;
+    });
+
+    // Add some cross-track relations
+    events[2].relatedEventIds.push('FEV-1'); // Biometric anomaly related to OTX match
+    events[6].relatedEventIds.push('FEV-4'); // MISP indicator related to velocity spike
+    events[7].relatedEventIds.push('FEV-6'); // Session hijack related to MISP indicator
+
+    return events;
+  }
+
+  generateBlastRadius(eventId: string): { nodes: BlastRadiusNode[], edges: {from: string, to: string}[] } {
+    // Mock topology based on the event
+    const nodes: BlastRadiusNode[] = [
+      { id: 'br_1', label: 'Public Gateway', type: 'Firewall', status: 'exposed' },
+      { id: 'br_2', label: 'Auth Service', type: 'ZTAGateway', status: 'safe' },
+      { id: 'br_3', label: 'Web App', type: 'Server', status: 'compromised' },
+      { id: 'br_4', label: 'Customer DB', type: 'DB', status: 'safe' },
+      { id: 'br_5', label: 'Attacker IP', type: 'Laptop', status: 'compromised' }
+    ];
+    const edges = [
+      { from: 'br_5', to: 'br_1' },
+      { from: 'br_1', to: 'br_3' },
+      { from: 'br_3', to: 'br_2' },
+      { from: 'br_2', to: 'br_4' }
+    ];
+
+    // If it's a critical event, show more compromise
+    if (eventId === 'FEV-7') {
+      nodes.find(n => n.id === 'br_2')!.status = 'exposed';
+      nodes.find(n => n.id === 'br_4')!.status = 'exposed';
+    }
+
+    return { nodes, edges };
+  }
+
+  // Topology Validation Engine
+  validateTopology(nodes: SandboxNode[], connections: SandboxConnection[]): TopologyValidationResult {
+    if (nodes.length === 0) {
+      return { isValid: false, message: 'Canvas is empty. Please add nodes.', isolatedNodes: [] };
+    }
+
+    const entryNodes = nodes.filter(n => n.type === 'Laptop' || n.type === 'IoT');
+    const targetNodes = nodes.filter(n => n.type === 'DB' || n.type === 'Server');
+
+    if (entryNodes.length === 0) {
+      return { isValid: false, message: 'Missing entry point (Laptop or IoT).', isolatedNodes: [] };
+    }
+    if (targetNodes.length === 0) {
+      return { isValid: false, message: 'Missing target asset (DB or Server).', isolatedNodes: [] };
+    }
+
+    // Check for isolated nodes
+    const connectedNodeIds = new Set<string>();
+    connections.forEach(c => {
+      connectedNodeIds.add(c.from);
+      connectedNodeIds.add(c.to);
+    });
+
+    const isolatedNodes = nodes.filter(n => !connectedNodeIds.has(n.id)).map(n => n.id);
+
+    if (isolatedNodes.length > 0) {
+      return { 
+        isValid: false, 
+        message: 'Some nodes are isolated. Please connect all nodes to the network.', 
+        isolatedNodes 
+      };
+    }
+
+    // Simple BFS to ensure a path exists from ANY entry to ANY target
+    let pathExists = false;
+    for (const entry of entryNodes) {
+      let queue: string[] = [entry.id];
+      let visited: Set<string> = new Set([entry.id]);
+
+      while (queue.length > 0) {
+        const currentId = queue.shift()!;
+        const currentNode = nodes.find(n => n.id === currentId);
+        
+        if (currentNode && (currentNode.type === 'DB' || currentNode.type === 'Server')) {
+          pathExists = true;
+          break;
+        }
+
+        const neighbors = connections
+          .filter(c => c.from === currentId)
+          .map(c => c.to);
+
+        for (const neighborId of neighbors) {
+          if (!visited.has(neighborId)) {
+            visited.add(neighborId);
+            queue.push(neighborId);
+          }
+        }
+      }
+      if (pathExists) break;
+    }
+
+    if (!pathExists) {
+      return { isValid: false, message: 'No valid path from entry point to target asset.', isolatedNodes: [] };
+    }
+
+    return { isValid: true, message: 'Topology validated successfully.', isolatedNodes: [] };
+  }
+
+  // Forensic Export Engine
+  exportCertifiedForensicBundle(events: ForensicEvent[], nodes: SandboxNode[], connections: SandboxConnection[]): void {
+    // 1. Generate CSV Data Stream
+    const csvHeaders = "timestamp,event_id,track,title,description,hash,previous_hash,is_critical\n";
+    const csvRows = events.map(e => 
+      `${e.timestamp.toISOString()},${e.id},${e.track},"${e.title}","${e.description}",${e.hash},${e.previousHash},${e.isCritical}`
+    ).join('\n');
+    const csvContent = csvHeaders + csvRows;
+
+    // 2. Generate Mock PCAP (JSON representation for this demo)
+    const pcapContent = JSON.stringify({
+      magic_number: "a1b2c3d4",
+      version_major: 2,
+      version_minor: 4,
+      thiszone: 0,
+      sigfigs: 0,
+      snaplen: 65535,
+      network: 1,
+      packets: events.filter(e => e.track === 'Network').map(e => ({
+        ts_sec: Math.floor(e.timestamp.getTime() / 1000),
+        ts_usec: (e.timestamp.getTime() % 1000) * 1000,
+        incl_len: 64,
+        orig_len: 64,
+        data: `Mock packet data for ${e.title}`
+      }))
+    }, null, 2);
+
+    // 3. Generate Mock PDF Summary (HTML representation for this demo)
+    const pdfContent = `
+      <html>
+        <head><title>ZTA-BioAuth Executive Summary</title></head>
+        <body>
+          <h1>Project ZTA-BioAuth: Security Assessment</h1>
+          <p><strong>Session ID:</strong> ${this.mockSha256(Date.now().toString()).substring(0, 16)}</p>
+          <p><strong>Timestamp:</strong> ${new Date().toISOString()}</p>
+          <h2>Defensive Evaluation Grade: A-</h2>
+          <p>False Acceptance Rate (FAR): 0.02%</p>
+          <p>False Rejection Rate (FRR): 1.5%</p>
+          <h2>Compliance Mapping</h2>
+          <ul>
+            <li>NIST SP 800-207: PASS</li>
+            <li>NIS2: PASS</li>
+            <li>ISO 27001: PASS</li>
+          </ul>
+        </body>
+      </html>
+    `;
+
+    // 4. Generate Manifest with Hashes
+    const manifestContent = `
+      csv_hash: ${this.mockSha256(csvContent)}
+      pcap_hash: ${this.mockSha256(pcapContent)}
+      pdf_hash: ${this.mockSha256(pdfContent)}
+    `;
+
+    // 5. Bundle into a mock ZIP (using a JSON structure to simulate a bundle download)
+    const bundle = {
+      "telemetry_stream.csv": csvContent,
+      "network_capture.pcap.json": pcapContent,
+      "executive_summary.html": pdfContent,
+      "manifest.sha256": manifestContent
+    };
+
+    const blob = new Blob([JSON.stringify(bundle, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.setAttribute('href', url);
+    link.setAttribute('download', `certified_forensic_bundle_${Date.now()}.zip.json`);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
   }
 }
 
