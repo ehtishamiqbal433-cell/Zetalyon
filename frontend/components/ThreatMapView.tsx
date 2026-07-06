@@ -147,8 +147,8 @@ export const ThreatMapView: React.FC = () => {
             <ResponsiveContainer width="100%" height="100%">
               <ScatterChart margin={{ top: 10, right: 10, bottom: 10, left: -20 }}>
                 <CartesianGrid strokeDasharray="3 3" stroke="#1f2937" />
-                <XAxis type="number" dataKey="x" name="Behavioral Variance" stroke="#4b5563" fontSize={12} tick={false} />
-                <YAxis type="number" dataKey="y" name="Network Anomaly Score" stroke="#4b5563" fontSize={12} tick={false} />
+                <XAxis type="number" dataKey="x" name="Behavioral Variance" stroke="#4b5563" fontSize={12} tick={{ fill: '#9ca3af' }} />
+                <YAxis type="number" dataKey="y" name="Network Anomaly Score" stroke="#4b5563" fontSize={12} tick={{ fill: '#9ca3af' }} />
                 <ZAxis type="number" dataKey="z" range={[20, 400]} name="Threat Severity" />
                 <Tooltip cursor={{ strokeDasharray: '3 3' }} contentStyle={{ backgroundColor: '#111827', borderColor: '#374151', color: '#fff' }} />
                 <Scatter name="Sessions" data={clusters} animationDuration={500}>
@@ -201,8 +201,8 @@ export const ThreatMapView: React.FC = () => {
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={ipSwarms} layout="vertical" margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
                 <CartesianGrid strokeDasharray="3 3" stroke="#1f2937" horizontal={false} />
-                <XAxis type="number" stroke="#4b5563" fontSize={12} />
-                <YAxis dataKey="origin" type="category" stroke="#4b5563" fontSize={12} width={120} />
+                <XAxis type="number" stroke="#4b5563" fontSize={12} tick={{ fill: '#9ca3af' }} />
+                <YAxis dataKey="origin" type="category" stroke="#4b5563" fontSize={12} width={120} tick={{ fill: '#9ca3af' }} />
                 <Tooltip cursor={{ fill: '#1f2937' }} contentStyle={{ backgroundColor: '#111827', borderColor: '#374151', color: '#fff' }} />
                 <Bar dataKey="volume" name="Request Volume" fill="#00f0ff" radius={[0, 4, 4, 0]}>
                   {ipSwarms.map((entry, index) => (
