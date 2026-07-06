@@ -16,7 +16,8 @@ export const SystemConfigView: React.FC = () => {
     biometricDriftTolerance: 0.5,
     threatMultiplier: 2.0,
     frictionDecayRate: 15,
-    mfaStrictness: 2
+    mfaStrictness: 2,
+    adversarialEntropy: 50
   });
   const [simulationData, setSimulationData] = useState<PolicySimulationData[]>([]);
 
@@ -222,6 +223,14 @@ export const SystemConfigView: React.FC = () => {
                 onChange={(v) => handlePolicyChange('frictionDecayRate', v)} 
                 format={(v) => `${v} mins`}
                 desc="Controls how fast a trusted session score recovers after moving to a new IP or device."
+              />
+              <PolicySlider 
+                label="Adversarial Polymorphism Entropy" 
+                value={policyConfig.adversarialEntropy} 
+                min={0} max={100} step={1} 
+                onChange={(v) => handlePolicyChange('adversarialEntropy', v)} 
+                format={(v) => `${v}%`}
+                desc="Controls the mutation rate of simulated attacks. High entropy randomizes cadence and protocols."
               />
               
               <div>
