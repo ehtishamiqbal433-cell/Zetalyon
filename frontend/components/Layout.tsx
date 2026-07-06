@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Shield, Activity, ShieldAlert, BookOpen, Settings, Cpu, TrendingUp, UserCircle, Server, Scale, FileCode } from 'lucide-react';
+import { Shield, Activity, ShieldAlert, BookOpen, Settings, Cpu, TrendingUp, UserCircle, Server, Scale, FileCode, Network, Database } from 'lucide-react';
 import { RoutePaths } from '../types.ts';
 
 interface LayoutProps {
@@ -16,6 +16,8 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
     { path: RoutePaths.USER_PORTAL, icon: <UserCircle size={20} />, label: 'User Portal' },
     { path: RoutePaths.BIOMETRICS, icon: <Cpu size={20} />, label: 'Biometric Engine' },
     { path: RoutePaths.THREAT_MAP, icon: <ShieldAlert size={20} />, label: 'Threat Intelligence' },
+    { path: RoutePaths.VERTEX_PIPELINE, icon: <Database size={20} />, label: 'Vertex AI Pipeline' },
+    { path: RoutePaths.CYBER_RANGE, icon: <Network size={20} />, label: 'Cyber Range Sandbox' },
     { path: RoutePaths.SYSTEM_TELEMETRY, icon: <Server size={20} />, label: 'System Telemetry' },
     { path: RoutePaths.SETTINGS, icon: <Settings size={20} />, label: 'System Config' },
     { path: RoutePaths.CODE_HARDENING, icon: <FileCode size={20} />, label: 'Code Hardening' },
