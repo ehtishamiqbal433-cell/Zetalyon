@@ -1,8 +1,32 @@
 import React from 'react';
-import { Book, Shield, Cpu, Network, Zap, Lock, EyeOff, Layers, Bot, Database, Activity, Fingerprint, Hash, TrendingUp, UserCircle, Server, Mouse, Keyboard, Smartphone, Cloud, Crosshair, AlertTriangle, Download, Sliders, FileCode } from 'lucide-react';
+import { Book, Shield, Cpu, Network, Zap, Lock, EyeOff, Layers, Bot, Database, Activity, Fingerprint, Hash, TrendingUp, UserCircle, Server, Mouse, Keyboard, Smartphone, Cloud, Crosshair, AlertTriangle, Download, Sliders, FileCode, BrainCircuit, Terminal } from 'lucide-react';
 
 export const Documentation: React.FC = () => {
   const features = [
+    {
+      icon: <Network className="text-zeta-accent" size={24} />,
+      title: 'Network Validation Engine (Cyber Range Sandbox)',
+      description: 'An interactive node drafting canvas and "Live Fire" attack simulator. Features a Granular Asset Configuration Panel for text-based ingress of IPs, DNS, and Firewall ACLs. Uses a deterministic routing simulator to validate packet flows.',
+      technical: 'React-based drag-and-drop canvas with SVG connection rendering and BFS-based deterministic packet filtering simulation.'
+    },
+    {
+      icon: <Terminal className="text-zeta-accent" size={24} />,
+      title: 'Active Process Monitoring & Telemetry Hooks',
+      description: 'Automatically identifies and hooks into active game/application target processes running on Desktop (Windows, macOS) or Mobile (Android, iOS) platforms.',
+      technical: 'Uses native platform channels (ps_list, Usage Stats, Custom URL handlers) wrapped in asynchronous low-overhead thread workers. Strictly processes telemetry timestamps and timing deltas to preserve privacy compliance.'
+    },
+    {
+      icon: <Database className="text-zeta-accent" size={24} />,
+      title: 'Vertex AI Context Pipeline (Unsupervised Clustering)',
+      description: 'Streaming ingestion pipeline to Vertex AI Feature Store (<50ms latency). Uses HDBSCAN/Isolation Forests to group telemetry into Core, Drift, and Outlier clusters. Features automated real-time model retraining and drift feedback loops.',
+      technical: 'Serverless worker pipeline via Cloud Run/Dataflow. Asynchronous Pub/Sub events decouple UI from heavy ML compute cycles.'
+    },
+    {
+      icon: <BrainCircuit className="text-zeta-accent" size={24} />,
+      title: 'Adaptive Predictive Risk Engine',
+      description: 'Upgrades static risk scoring with Temporal Decay (EMA Momentum), Hardware-Contextual Anchoring, and Bayesian Inference Threat-Weighting. Executes complex floating-point matrix math in <5ms.',
+      technical: 'Node.js/Express backend calculates posterior probabilities dynamically based on live threat feeds and hardware baseline matches.'
+    },
     {
       icon: <FileCode className="text-green-400" size={24} />,
       title: 'DevSecOps Code Hardening & Obfuscation',
