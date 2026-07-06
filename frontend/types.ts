@@ -240,5 +240,6 @@ export enum RoutePaths {
   SYSTEM_TELEMETRY = '/system-telemetry',
   SETTINGS = '/settings',
   DOCUMENTATION = '/docs',
-  LICENSE = '/license'
+  LICENSE = '/license',
+  CODE_HARDENING = '/code-hardening'
 }
