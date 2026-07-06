@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Shield, Activity, ShieldAlert, BookOpen, Settings, Cpu, TrendingUp, UserCircle, Server, Scale } from 'lucide-react';
+import { Shield, Activity, ShieldAlert, BookOpen, Settings, Cpu, TrendingUp, UserCircle, Server, Scale, FileCode } from 'lucide-react';
 import { RoutePaths } from '../types.ts';
 
 interface LayoutProps {
@@ -18,6 +18,7 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
     { path: RoutePaths.THREAT_MAP, icon: <ShieldAlert size={20} />, label: 'Threat Intelligence' },
     { path: RoutePaths.SYSTEM_TELEMETRY, icon: <Server size={20} />, label: 'System Telemetry' },
     { path: RoutePaths.SETTINGS, icon: <Settings size={20} />, label: 'System Config' },
+    { path: RoutePaths.CODE_HARDENING, icon: <FileCode size={20} />, label: 'Code Hardening' },
     { path: RoutePaths.DOCUMENTATION, icon: <BookOpen size={20} />, label: 'Documentation' },
     { path: RoutePaths.LICENSE, icon: <Scale size={20} />, label: 'Software IP & License' },
   ];
