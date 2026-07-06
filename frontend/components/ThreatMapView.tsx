@@ -1,22 +1,22 @@
 import React, { useState, useEffect } from 'react';
-import { ScatterChart, Scatter, XAxis, YAxis, ZAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell, BarChart, Bar, LineChart, Line, ReferenceLine } from 'recharts';
-import { ShieldAlert, Network, Globe, Crosshair, Users, Shield, Activity, Database } from 'lucide-react';
+import { ScatterChart, Scatter, XAxis, YAxis, ZAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell, BarChart, Bar, LineChart, Line, ReferenceLine, AreaChart, Area } from 'recharts';
+import { ShieldAlert, Network, Globe, Crosshair, Users, Shield, Activity, Database, BrainCircuit } from 'lucide-react';
 import { simulationService } from '../services/simulationService.ts';
-import { AnomalyCluster, IPSwarm, TTPEvent, ThreatFeedIndicator, CompoundRiskData } from '../types.ts';
+import { AnomalyCluster, IPSwarm, TTPEvent, ThreatFeedIndicator, PredictiveRiskData } from '../types.ts';
 
 export const ThreatMapView: React.FC = () => {
   const [clusters, setClusters] = useState<AnomalyCluster[]>([]);
   const [ipSwarms, setIpSwarms] = useState<IPSwarm[]>([]);
   const [ttpEvents, setTtpEvents] = useState<TTPEvent[]>([]);
   const [threatFeeds, setThreatFeeds] = useState<ThreatFeedIndicator[]>([]);
-  const [compoundRisk, setCompoundRisk] = useState<CompoundRiskData[]>([]);
+  const [predictiveRisk, setPredictiveRisk] = useState<PredictiveRiskData[]>([]);
 
   useEffect(() => {
     setClusters(simulationService.generateAnomalyClusters());
     setIpSwarms(simulationService.generateIPSwarms());
     setTtpEvents(simulationService.generateTTPEvents(4));
     setThreatFeeds(simulationService.generateThreatFeeds(4));
-    setCompoundRisk(simulationService.generateCompoundRiskData(20));
+    setPredictiveRisk(simulationService.generatePredictiveRiskData(20));
 
     const interval = setInterval(() => {
       setClusters(prev => prev.map(c => ({
@@ -29,7 +29,7 @@ export const ThreatMapView: React.FC = () => {
       if (Math.random() > 0.7) setTtpEvents(prev => [simulationService.generateTTPEvents(1)[0], ...prev].slice(0, 6));
       if (Math.random() > 0.6) setThreatFeeds(prev => [simulationService.generateThreatFeeds(1)[0], ...prev].slice(0, 5));
       
-      setCompoundRisk(prev => [...prev.slice(1), simulationService.generateCompoundRiskData(1)[0]]);
+      setPredictiveRisk(prev => [...prev.slice(1), simulationService.generatePredictiveRiskData(1)[0]]);
     }, 2000);
 
     return () => clearInterval(interval);
@@ -73,32 +73,41 @@ export const ThreatMapView: React.FC = () => {
       </header>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* Dynamic Compound Risk Scoring */}
+        {/* Adaptive Predictive Risk Engine */}
         <div className="lg:col-span-2 bg-zeta-800 border border-gray-800 rounded-xl p-6 shadow-lg">
           <div className="flex justify-between items-center mb-6">
             <h3 className="text-lg font-semibold text-white flex items-center">
-              <Activity size={18} className="mr-2 text-zeta-accent" />
-              Dynamic Compound Risk Scoring Algorithm
+              <BrainCircuit size={18} className="mr-2 text-zeta-accent" />
+              Adaptive Predictive Risk Engine (EMA & Bayesian Inference)
             </h3>
             <div className="flex space-x-3 text-xs font-mono">
-              <span className="flex items-center"><div className="w-2 h-2 rounded-full bg-blue-400 mr-1"></div> Biometric Risk</span>
-              <span className="flex items-center"><div className="w-2 h-2 rounded-full bg-zeta-alert mr-1"></div> Final Compound Score</span>
+              <span className="flex items-center"><div className="w-2 h-2 rounded-full bg-blue-400 mr-1"></div> Raw Anomaly</span>
+              <span className="flex items-center"><div className="w-2 h-2 rounded-full bg-purple-400 mr-1"></div> EMA Momentum</span>
+              <span className="flex items-center"><div className="w-2 h-2 rounded-full bg-zeta-alert mr-1"></div> Final Predictive Risk</span>
             </div>
           </div>
           <p className="text-xs text-gray-400 mb-4">
-            Fuses local biometric telemetry with live external threat feeds. If the compound score exceeds 0.80, the session is instantly redirected to a synthetic honeypot.
+            Calculates risk using Temporal Decay (EMA), Hardware-Contextual Anchoring, and Bayesian Inference Threat-Weighting. Executes in &lt;5ms.
           </p>
           <div className="h-64 w-full">
             <ResponsiveContainer width="100%" height="100%">
-              <LineChart data={compoundRisk} margin={{ top: 5, right: 5, left: -20, bottom: 5 }}>
+              <AreaChart data={predictiveRisk} margin={{ top: 5, right: 5, left: -20, bottom: 5 }}>
+                <defs>
+                  <linearGradient id="colorRisk" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="5%" stopColor="#ff003c" stopOpacity={0.3}/>
+                    <stop offset="95%" stopColor="#ff003c" stopOpacity={0}/>
+                  </linearGradient>
+                </defs>
                 <CartesianGrid strokeDasharray="3 3" stroke="#1f2937" vertical={false} />
                 <XAxis dataKey="time" stroke="#4b5563" fontSize={12} tick={false} />
                 <YAxis stroke="#4b5563" fontSize={12} domain={[0, 1.0]} tickFormatter={(val) => val.toFixed(1)} />
                 <Tooltip contentStyle={{ backgroundColor: '#111827', borderColor: '#374151', color: '#fff' }} />
                 <ReferenceLine y={0.8} stroke="#ff003c" strokeDasharray="3 3" label={{ position: 'insideTopLeft', value: 'Honeypot Threshold (0.80)', fill: '#ff003c', fontSize: 10 }} />
-                <Line type="monotone" dataKey="biometricRisk" name="Raw Biometric Risk" stroke="#60a5fa" strokeWidth={2} dot={false} isAnimationActive={false} />
-                <Line type="stepAfter" dataKey="finalRiskScore" name="Compound Risk Score" stroke="#ff003c" strokeWidth={2} dot={false} isAnimationActive={false} />
-              </LineChart>
+                
+                <Line type="monotone" dataKey="rawAnomaly" name="Raw Anomaly" stroke="#60a5fa" strokeWidth={1} dot={false} isAnimationActive={false} opacity={0.5} />
+                <Line type="monotone" dataKey="emaMomentum" name="EMA Momentum" stroke="#a855f7" strokeWidth={2} dot={false} isAnimationActive={false} strokeDasharray="5 5" />
+                <Area type="monotone" dataKey="finalPredictiveRisk" name="Final Predictive Risk" stroke="#ff003c" strokeWidth={2} fillOpacity={1} fill="url(#colorRisk)" isAnimationActive={false} />
+              </AreaChart>
             </ResponsiveContainer>
           </div>
         </div>
