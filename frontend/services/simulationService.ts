@@ -17,7 +17,7 @@ import {
   XAIFeedback, MicroPolicyConfig, PolicySimulationData, PredictiveRiskData, SandboxLeaderboardEntry,
   VertexClusterPoint, VertexRetrainingEvent, VertexIngestionMetric, ActiveProcessData,
   SandboxNode, SandboxConnection, PacketSimulationResult, FirewallRule, ForensicEvent, BlastRadiusNode,
-  TopologyValidationResult
+  TopologyValidationResult, ApiEndpointSchema, SimulationPayload, NetworkInterface, SupportTicket
 } from '../types.ts';
 
 class SimulationService {
@@ -139,18 +139,52 @@ class SimulationService {
     const data: TrajectoryPoint[] = [];
     let x = 100;
     let y = 100;
+    let prevVx = 0;
+    let prevVy = 0;
+    let prevAx = 0;
+    let prevAy = 0;
+
     for (let i = 0; i < count; i++) {
-      x += (Math.random() - 0.5) * 20;
-      y += (Math.random() - 0.5) * 20;
+      // Simulate human-like movement with some noise
+      const dx = (Math.random() - 0.5) * 20;
+      const dy = (Math.random() - 0.5) * 20;
+      x += dx;
+      y += dy;
       
+      // Inject occasional "bot-like" snap or jitter
       const isAnomalous = Math.random() > 0.95 || this.activeChaosAttacks.includes('headless_webdriver');
       const rawX = isAnomalous ? x + (Math.random() > 0.5 ? 50 : -50) : x + (Math.random() - 0.5) * 5;
       const rawY = isAnomalous ? y + (Math.random() > 0.5 ? 50 : -50) : y + (Math.random() - 0.5) * 5;
 
+      // Kalman filter smooths it out
       const kalmanX = x; 
       const kalmanY = y;
 
-      data.push({ time: i, rawX, rawY, kalmanX, kalmanY, isAnomalous });
+      // Kinematic calculations
+      const vx = dx;
+      const vy = dy;
+      const velocity = Math.sqrt(vx*vx + vy*vy);
+      
+      const ax = vx - prevVx;
+      const ay = vy - prevVy;
+      const acceleration = Math.sqrt(ax*ax + ay*ay);
+
+      const jx = ax - prevAx;
+      const jy = ay - prevAy;
+      const jerk = Math.sqrt(jx*jx + jy*jy);
+
+      prevVx = vx; prevVy = vy;
+      prevAx = ax; prevAy = ay;
+
+      data.push({ 
+        time: i, 
+        rawX, rawY, 
+        kalmanX, kalmanY, 
+        isAnomalous,
+        velocity,
+        acceleration,
+        jerk
+      });
     }
     return data;
   }
@@ -196,7 +230,19 @@ class SimulationService {
         y += (Math.random() - 0.5) * 10;
       }
       const velocity = isSaccade ? 300 + Math.random() * 200 : 10 + Math.random() * 20;
-      data.push({ time: i, x, y, saccadeVelocity: velocity, isAnomalous: velocity > 450 && !isSaccade });
+      
+      // Fixational Gaze Jitter metrics
+      const dispersion = isSaccade ? 0 : 2 + Math.random() * 5;
+      const entropy = isSaccade ? 0 : 0.5 + Math.random() * 0.5;
+
+      data.push({ 
+        time: i, 
+        x, y, 
+        saccadeVelocity: velocity, 
+        isAnomalous: velocity > 450 && !isSaccade,
+        dispersion,
+        entropy
+      });
     }
     return data;
   }
@@ -246,13 +292,17 @@ class SimulationService {
   generateTTPEvents(count: number): TTPEvent[] {
     const tactics = ['Credential Access', 'Execution', 'Defense Evasion', 'Collection'];
     const techniques = ['Token Theft', 'DOM Tampering', 'API Hooking (Frida)', 'Automated Scraping', 'Clipboard Exfiltration'];
-    return Array.from({ length: count }, () => ({
-      id: `TTP-${Math.random().toString(36).substr(2, 5).toUpperCase()}`,
-      tactic: tactics[Math.floor(Math.random() * tactics.length)],
-      technique: techniques[Math.floor(Math.random() * techniques.length)],
-      severity: Math.random() > 0.8 ? 'critical' : 'high',
-      timestamp: new Date()
-    }));
+    return Array.from({ length: count }, () => {
+      const isPolymorphicSwap = Math.random() > 0.7;
+      return {
+        id: `TTP-${Math.random().toString(36).substr(2, 5).toUpperCase()}`,
+        tactic: tactics[Math.floor(Math.random() * tactics.length)],
+        technique: techniques[Math.floor(Math.random() * techniques.length)],
+        severity: Math.random() > 0.8 ? 'critical' : 'high',
+        timestamp: new Date(),
+        isPolymorphicSwap
+      };
+    });
   }
 
   generateEntropyData(count: number): EntropyData[] {
@@ -317,41 +367,41 @@ class SimulationService {
       {
         id: 'TA0001', name: 'Initial Access',
         techniques: [
-          { id: 'T1078', name: 'Valid Accounts', active: isInitialAccess, description: 'Compromised credentials used.' },
-          { id: 'T1190', name: 'Exploit Public-Facing App', active: false, description: 'Exploiting a vulnerability.' },
-          { id: 'T1566', name: 'Phishing', active: false, description: 'Spearphishing attachment/link.' }
+          { id: 'T1078', name: 'Valid Accounts', active: isInitialAccess, description: 'Compromised credentials used.', status: isInitialAccess ? 'breached' : 'idle' },
+          { id: 'T1190', name: 'Exploit Public-Facing App', active: false, description: 'Exploiting a vulnerability.', status: 'idle' },
+          { id: 'T1566', name: 'Phishing', active: false, description: 'Spearphishing attachment/link.', status: 'idle' }
         ]
       },
       {
         id: 'TA0002', name: 'Execution',
         techniques: [
-          { id: 'T1059.007', name: 'JavaScript/Bot Execution', active: isExecution, description: 'High Key-Flight Time Uniformity + Web User Agent.' },
-          { id: 'T1204', name: 'User Execution', active: false, description: 'User clicked malicious link.' },
-          { id: 'T1047', name: 'WMI', active: false, description: 'Windows Management Instrumentation.' }
+          { id: 'T1059.007', name: 'JavaScript/Bot Execution', active: isExecution, description: 'High Key-Flight Time Uniformity + Web User Agent.', status: isExecution ? 'polymorphic_swap' : 'idle' },
+          { id: 'T1204', name: 'User Execution', active: false, description: 'User clicked malicious link.', status: 'idle' },
+          { id: 'T1047', name: 'WMI', active: false, description: 'Windows Management Instrumentation.', status: 'idle' }
         ]
       },
       {
         id: 'TA0005', name: 'Defense Evasion',
         techniques: [
-          { id: 'T1542', name: 'Subvert Trust Controls', active: isDefenseEvasion, description: 'Missing App Check Token / Dev Client.' },
-          { id: 'T1562', name: 'Impair Defenses', active: false, description: 'Disabling security tools.' },
-          { id: 'T1027', name: 'Obfuscated Files', active: false, description: 'Payload encryption.' }
+          { id: 'T1542', name: 'Subvert Trust Controls', active: isDefenseEvasion, description: 'Missing App Check Token / Dev Client.', status: isDefenseEvasion ? 'mitigated' : 'idle' },
+          { id: 'T1562', name: 'Impair Defenses', active: false, description: 'Disabling security tools.', status: 'idle' },
+          { id: 'T1027', name: 'Obfuscated Files', active: false, description: 'Payload encryption.', status: 'idle' }
         ]
       },
       {
         id: 'TA0006', name: 'Credential Access',
         techniques: [
-          { id: 'T1539', name: 'Steal Web Session Cookie', active: isCredentialAccess, description: 'Failed IP Reputation + Valid JWT Session.' },
-          { id: 'T1110', name: 'Brute Force', active: false, description: 'Password guessing.' },
-          { id: 'T1003', name: 'OS Credential Dumping', active: false, description: 'LSASS memory dump.' }
+          { id: 'T1539', name: 'Steal Web Session Cookie', active: isCredentialAccess, description: 'Failed IP Reputation + Valid JWT Session.', status: isCredentialAccess ? 'breached' : 'idle' },
+          { id: 'T1110', name: 'Brute Force', active: false, description: 'Password guessing.', status: 'idle' },
+          { id: 'T1003', name: 'OS Credential Dumping', active: false, description: 'LSASS memory dump.', status: 'idle' }
         ]
       },
       {
         id: 'TA0007', name: 'Discovery',
         techniques: [
-          { id: 'T1082', name: 'System Info Discovery', active: false, description: 'Querying OS details.' },
-          { id: 'T1049', name: 'System Network Connections', active: false, description: 'Netstat enumeration.' },
-          { id: 'T1018', name: 'Remote System Discovery', active: false, description: 'Ping sweeps.' }
+          { id: 'T1082', name: 'System Info Discovery', active: false, description: 'Querying OS details.', status: 'idle' },
+          { id: 'T1049', name: 'System Network Connections', active: false, description: 'Netstat enumeration.', status: 'idle' },
+          { id: 'T1018', name: 'Remote System Discovery', active: false, description: 'Ping sweeps.', status: 'idle' }
         ]
       }
     ];
@@ -361,9 +411,9 @@ class SimulationService {
     const now = new Date();
     return [
       { id: 'EV-1', timestamp: new Date(now.getTime() - 120000), tactic: 'Initial Access', techniqueId: 'T1078', techniqueName: 'Valid Accounts', description: 'Login from unknown IP using valid credentials.' },
-      { id: 'EV-2', timestamp: new Date(now.getTime() - 90000), tactic: 'Execution', techniqueId: 'T1059.007', techniqueName: 'JavaScript/Bot Execution', description: 'Perfectly uniform keystroke flight-times detected.' },
+      { id: 'EV-2', timestamp: new Date(now.getTime() - 90000), tactic: 'Execution', techniqueId: 'T1059.007', techniqueName: 'JavaScript/Bot Execution', description: 'Perfectly uniform keystroke flight-times detected.', isPolymorphicSwap: true },
       { id: 'EV-3', timestamp: new Date(now.getTime() - 45000), tactic: 'Defense Evasion', techniqueId: 'T1542', techniqueName: 'Subvert Trust Controls', description: 'X-Firebase-AppCheck header missing or invalid.' },
-      { id: 'EV-4', timestamp: new Date(now.getTime() - 10000), tactic: 'Credential Access', techniqueId: 'T1539', techniqueName: 'Steal Web Session Cookie', description: 'Session hijacked. Compound risk score exceeded 0.80.' }
+      { id: 'EV-4', timestamp: new Date(now.getTime() - 10000), tactic: 'Credential Access', techniqueId: 'T1539', techniqueName: 'Steal Web Session Cookie', description: 'Session hijacked. Compound risk score exceeded 0.80.', isPolymorphicSwap: true }
     ];
   }
 
@@ -710,18 +760,19 @@ class SimulationService {
     return shuffled.slice(0, numActive);
   }
 
-  // Deterministic Routing & Packet-Filtering Simulator
-  validatePacketFlow(attackType: string, nodes: SandboxNode[], connections: SandboxConnection[]): PacketSimulationResult {
+  // Stateful Network Emulation & Formal Verification Core
+  validatePacketFlow(attackType: string, nodes: SandboxNode[], connections: SandboxConnection[], entropyLevel: number = 0): PacketSimulationResult {
     // 1. Find entry point (Laptop or IoT)
     const entryNodes = nodes.filter(n => n.type === 'Laptop' || n.type === 'IoT');
     if (entryNodes.length === 0) {
-      return { success: true, message: 'No entry point found. Attack mitigated.' };
+      return { success: true, message: 'No entry point found. Attack mitigated.', pathTaken: [], packetStates: {}, polymorphicSwaps: 0 };
     }
 
     // 2. Define attack payload characteristics based on type
     let payloadPort = '80';
     let payloadProtocol = 'TCP';
     let targetType = 'Server';
+    let polymorphicSwaps = 0;
 
     switch (attackType) {
       case 'SQL Injection':
@@ -742,65 +793,95 @@ class SimulationService {
         break;
     }
 
-    // 3. Traverse the graph (BFS)
+    // 3. Traverse the graph (BFS) with state tracking
     let queue: string[] = [entryNodes[0].id];
     let visited: Set<string> = new Set([entryNodes[0].id]);
+    let pathTaken: string[] = [];
+    let packetStates: Record<string, 'ALLOW' | 'DENY' | 'STEP_UP'> = {};
 
     while (queue.length > 0) {
       const currentId = queue.shift()!;
       const currentNode = nodes.find(n => n.id === currentId);
       
       if (!currentNode) continue;
+      pathTaken.push(currentId);
 
       // Check if we reached the target
       if (currentNode.type === targetType) {
+        packetStates[currentId] = 'ALLOW';
         return { 
           success: false, 
           message: `Breach successful. Payload reached ${targetType}.`,
-          failedAtNodeId: currentId
+          failedAtNodeId: currentId,
+          pathTaken,
+          packetStates,
+          polymorphicSwaps
         };
       }
 
-      // Evaluate Firewall Rules deterministically
+      // Evaluate Firewall Rules deterministically (Multi-Layer ACL Matrix Inspector)
       if (currentNode.type === 'Firewall') {
         let packetAllowed = false;
         
         // Default deny if no rules
         if (!currentNode.config.firewallRules || currentNode.config.firewallRules.length === 0) {
-           return { success: true, message: 'Firewall default deny triggered. Attack mitigated.', failedAtNodeId: currentId };
+           packetStates[currentId] = 'DENY';
+           return { success: true, message: 'Firewall default deny triggered. Attack mitigated.', failedAtNodeId: currentId, pathTaken, packetStates, polymorphicSwaps };
         }
 
+        // Ordered, first-match-wins sequential logic
         for (const rule of currentNode.config.firewallRules) {
-          // Simple deterministic matching
+          // Layer 3 & 4 matching
           const portMatch = rule.port === 'ANY' || rule.port === payloadPort;
           const protocolMatch = rule.protocol === 'ANY' || rule.protocol === payloadProtocol;
           
           if (portMatch && protocolMatch) {
             if (rule.action === 'DENY') {
-              return { 
-                success: true, 
-                message: `Firewall rule DENY matched. Attack mitigated.`,
-                failedAtNodeId: currentId,
-                failedRule: `${rule.action} ${rule.sourceIp} ${rule.destIp} ${rule.port} ${rule.protocol}`
-              };
+              // Polymorphic Mutation Logic
+              if (entropyLevel > 50 && Math.random() > 0.5) {
+                polymorphicSwaps++;
+                payloadPort = '8080'; // Mutate port to try bypass
+                packetAllowed = true; // Assume bypass successful for simulation
+                packetStates[currentId] = 'ALLOW';
+                break;
+              } else {
+                packetStates[currentId] = 'DENY';
+                return { 
+                  success: true, 
+                  message: `Firewall rule DENY matched. Attack mitigated.`,
+                  failedAtNodeId: currentId,
+                  failedRule: `${rule.action} ${rule.sourceIp} ${rule.destIp} ${rule.port} ${rule.protocol}`,
+                  pathTaken,
+                  packetStates,
+                  polymorphicSwaps
+                };
+              }
             } else if (rule.action === 'ALLOW') {
               packetAllowed = true;
+              packetStates[currentId] = 'ALLOW';
               break; // Stop evaluating rules, packet is allowed through this node
             }
           }
         }
 
         if (!packetAllowed) {
-           return { success: true, message: 'Implicit deny. Attack mitigated.', failedAtNodeId: currentId };
+           packetStates[currentId] = 'DENY';
+           return { success: true, message: 'Implicit deny. Attack mitigated.', failedAtNodeId: currentId, pathTaken, packetStates, polymorphicSwaps };
         }
       }
 
-      // Evaluate ZTA Gateway
+      // Evaluate ZTA Gateway (Zero Trust Identity Layer)
       if (currentNode.type === 'ZTAGateway') {
         // ZTA requires specific trust scores or biometric validation
         // For simulation, we assume ZTA blocks lateral movement (SSH) and DDoS
         if (attackType === 'Lateral Movement' || attackType === 'Distributed Denial of Service (DDoS)') {
-           return { success: true, message: 'ZTA Gateway blocked unauthorized context. Attack mitigated.', failedAtNodeId: currentId };
+           packetStates[currentId] = 'DENY';
+           return { success: true, message: 'ZTA Gateway blocked unauthorized context. Attack mitigated.', failedAtNodeId: currentId, pathTaken, packetStates, polymorphicSwaps };
+        } else if (attackType === 'Credential Stuffing') {
+           packetStates[currentId] = 'STEP_UP';
+           return { success: true, message: 'ZTA Gateway triggered Step-Up MFA. Attack mitigated.', failedAtNodeId: currentId, pathTaken, packetStates, polymorphicSwaps };
+        } else {
+           packetStates[currentId] = 'ALLOW';
         }
       }
 
@@ -817,7 +898,7 @@ class SimulationService {
       }
     }
 
-    return { success: true, message: 'Attack path exhausted. Target not reached.' };
+    return { success: true, message: 'Attack path exhausted. Target not reached.', pathTaken, packetStates, polymorphicSwaps };
   }
 
   // Mock SHA-256 generator for Chain of Custody
@@ -1031,6 +1112,151 @@ class SimulationService {
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
+  }
+
+  // Formal Verification Engine (Z3-style policy checker)
+  verifyFirewallRules(nodes: SandboxNode[]): { isValid: boolean, shadowedRules: string[] } {
+    const shadowedRules: string[] = [];
+    
+    nodes.forEach(node => {
+      if (node.type === 'Firewall' && node.config.firewallRules) {
+        const rules = node.config.firewallRules;
+        // Simple check: if an ALLOW ANY ANY rule exists before a DENY rule, the DENY is shadowed
+        let allowAllSeen = false;
+        rules.forEach((rule, index) => {
+          if (rule.action === 'ALLOW' && rule.sourceIp === 'ANY' && rule.destIp === 'ANY' && rule.port === 'ANY' && rule.protocol === 'ANY') {
+            allowAllSeen = true;
+          } else if (allowAllSeen) {
+            shadowedRules.push(`Node ${node.label} - Rule ${index + 1} is shadowed by a previous ALLOW ALL rule.`);
+            rule.isShadowed = true; // Mark for UI highlighting
+          } else {
+            rule.isShadowed = false;
+          }
+        });
+      }
+    });
+
+    return {
+      isValid: shadowedRules.length === 0,
+      shadowedRules
+    };
+  }
+
+  // IaC Export Engine
+  exportIaCTemplates(nodes: SandboxNode[], connections: SandboxConnection[]): void {
+    // Generate mock Terraform
+    let tfContent = `
+# Generated by ZTA-BioAuth IaC Export Engine
+provider "google" {
+  project = "zta-bioauth-demo"
+  region  = "us-central1"
+}
+
+resource "google_compute_network" "vpc_network" {
+  name = "zta-sandbox-network"
+}
+`;
+    nodes.forEach(node => {
+      if (node.type === 'Server' || node.type === 'DB') {
+        tfContent += `
+resource "google_compute_instance" "${node.id}" {
+  name         = "${node.label.toLowerCase().replace(/\s+/g, '-')}"
+  machine_type = "e2-micro"
+  zone         = "us-central1-a"
+  
+  network_interface {
+    network = google_compute_network.vpc_network.name
+    network_ip = "${node.config.ipAddress.split('/')[0]}"
+  }
+}
+`;
+      }
+    });
+
+    // Generate mock Cisco ACL
+    let aclContent = `! Generated Cisco ACL Configuration\n`;
+    nodes.forEach(node => {
+      if (node.type === 'Firewall' && node.config.firewallRules.length > 0) {
+        aclContent += `ip access-list extended ${node.label.toUpperCase().replace(/\s+/g, '_')}_ACL\n`;
+        node.config.firewallRules.forEach((rule, idx) => {
+          const action = rule.action === 'ALLOW' ? 'permit' : 'deny';
+          const proto = rule.protocol === 'ANY' ? 'ip' : rule.protocol.toLowerCase();
+          const src = rule.sourceIp === 'ANY' ? 'any' : `host ${rule.sourceIp}`;
+          const dst = rule.destIp === 'ANY' ? 'any' : `host ${rule.destIp}`;
+          const port = rule.port === 'ANY' ? '' : `eq ${rule.port}`;
+          aclContent += ` ${idx * 10 + 10} ${action} ${proto} ${src} ${dst} ${port}\n`;
+        });
+      }
+    });
+
+    const bundle = {
+      "main.tf": tfContent,
+      "cisco_acl.txt": aclContent
+    };
+
+    const blob = new Blob([JSON.stringify(bundle, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.setAttribute('href', url);
+    link.setAttribute('download', `iac_templates_${Date.now()}.zip.json`);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  }
+
+  // API Schema Generator
+  getApiSchemas(): ApiEndpointSchema[] {
+    return [
+      {
+        path: '/api/v1/telemetry/stream',
+        method: 'POST',
+        description: 'Ingests high-frequency biometric telemetry arrays.',
+        payloadSchema: '{\n  "timestamp": "ISO8601",\n  "trajectory": [{ "x": 0, "y": 0, "t": 0 }],\n  "cadence": [{ "key": "a", "dwell": 120 }]\n}',
+        curlExample: 'curl -X POST https://api.zta.local/v1/telemetry/stream -H "Authorization: Bearer <JWT>" -d \'{"trajectory":[]}\''
+      },
+      {
+        path: '/api/v1/policy/update',
+        method: 'PUT',
+        description: 'Updates granular micro-policy rules.',
+        payloadSchema: '{\n  "biometricDriftTolerance": 0.5,\n  "threatMultiplier": 2.0\n}',
+        curlExample: 'curl -X PUT https://api.zta.local/v1/policy/update -H "Authorization: Bearer <JWT>" -d \'{"biometricDriftTolerance":0.8}\''
+      }
+    ];
+  }
+
+  // Execute Attack Simulation (Async Hook)
+  async executeAttackSimulation(attackType: string, nodes: SandboxNode[], connections: SandboxConnection[], entropyLevel: number = 0): Promise<SimulationPayload> {
+    // Simulate network delay
+    await new Promise(resolve => setTimeout(resolve, 1500));
+
+    const packetResult = this.validatePacketFlow(attackType, nodes, connections, entropyLevel);
+    const forensicTimeline = this.generateForensicTimeline();
+    const complianceMapping = this.generateComplianceLogs(3);
+    
+    // Generate cryptographic signatures for the payload
+    const cryptographicSignatures = [
+      { file: 'forensicTimeline.json', hash: this.mockSha256(JSON.stringify(forensicTimeline)) },
+      { file: 'packetLogs.json', hash: this.mockSha256(JSON.stringify(packetResult)) },
+      { file: 'complianceMapping.json', hash: this.mockSha256(JSON.stringify(complianceMapping)) }
+    ];
+
+    return {
+      status: 200,
+      data: {
+        forensicTimeline,
+        packetLogs: packetResult,
+        complianceMapping,
+        cryptographicSignatures
+      }
+    };
+  }
+
+  // Support Ticket Submission
+  async submitSupportTicket(ticket: SupportTicket): Promise<boolean> {
+    // Simulate network delay
+    await new Promise(resolve => setTimeout(resolve, 1000));
+    console.log("Support Ticket Submitted:", ticket);
+    return true;
   }
 }
 
