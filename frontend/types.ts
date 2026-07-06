@@ -17,7 +17,7 @@ export interface TrustDataPoint {
 export interface SecurityEvent {
   id: string;
   timestamp: Date;
-  type: 'ANALYSIS' | 'THREAT_BLOCKED' | 'ATTESTATION' | 'SYSTEM' | 'SESSION_INVALIDATED' | 'COMPLIANCE_LOG' | 'FOCUS_LOSS' | 'PERIPHERAL_SHIFT' | 'PROXIMITY_ALERT' | 'SESSION_HANDOVER';
+  type: 'ANALYSIS' | 'THREAT_BLOCKED' | 'ATTESTATION' | 'SYSTEM' | 'SESSION_INVALIDATED' | 'COMPLIANCE_LOG' | 'FOCUS_LOSS' | 'PERIPHERAL_SHIFT' | 'PROXIMITY_ALERT' | 'SESSION_HANDOVER' | 'PROCESS_HOOK';
   message: string;
   severity: 'info' | 'warning' | 'critical';
   module: string;
@@ -231,15 +231,130 @@ export interface PolicySimulationData {
   frr: number; // False Rejection Rate
 }
 
+export interface PredictiveRiskData {
+  time: string;
+  rawAnomaly: number;
+  emaMomentum: number;
+  bayesianPrior: number;
+  hardwareAnchor: number;
+  finalPredictiveRisk: number;
+}
+
+export type SandboxNodeType = 'Laptop' | 'Server' | 'DB' | 'IoT' | 'Firewall' | 'VPN' | 'ZTAGateway';
+
+export interface FirewallRule {
+  id: string;
+  action: 'ALLOW' | 'DENY';
+  sourceIp: string;
+  destIp: string;
+  port: string;
+  protocol: 'TCP' | 'UDP' | 'ICMP' | 'ANY';
+}
+
+export interface NetworkConfig {
+  ipAddress: string;
+  subnetMask: string;
+  primaryDns: string;
+  secondaryDns: string;
+  firewallRules: FirewallRule[];
+}
+
+export interface SandboxNode {
+  id: string;
+  type: SandboxNodeType;
+  x: number;
+  y: number;
+  label: string;
+  trustScore: number;
+  config: NetworkConfig;
+}
+
+export interface SandboxConnection {
+  id: string;
+  from: string;
+  to: string;
+}
+
+export interface SandboxLeaderboardEntry {
+  rank: number;
+  alias: string;
+  efficiencyScore: number;
+  cost: number;
+  badge: string;
+}
+
+export interface VertexClusterPoint {
+  x: number;
+  y: number;
+  z: number;
+  cluster: 'Core' | 'Drift' | 'Outlier';
+}
+
+export interface VertexRetrainingEvent {
+  id: string;
+  timestamp: Date;
+  type: 'Baseline Adjusted' | 'Adversarial Tagged';
+  details: string;
+  userId: string;
+}
+
+export interface VertexIngestionMetric {
+  time: string;
+  latencyMs: number;
+  throughput: number;
+}
+
+export interface ActiveProcessData {
+  processName: string;
+  pid: number;
+  platform: 'Windows' | 'macOS' | 'Android' | 'iOS';
+  isApprovedTarget: boolean;
+  hookStatus: 'Scanning' | 'Hooked' | 'Detached';
+}
+
+export interface PacketSimulationResult {
+  success: boolean;
+  message: string;
+  failedAtNodeId?: string;
+  failedRule?: string;
+}
+
+export interface ForensicEvent {
+  id: string;
+  timestamp: Date;
+  track: 'Biometric' | 'Network' | 'ThreatIntel';
+  title: string;
+  description: string;
+  hash: string;
+  previousHash: string;
+  relatedEventIds: string[];
+  isCritical: boolean;
+}
+
+export interface BlastRadiusNode {
+  id: string;
+  label: string;
+  type: SandboxNodeType;
+  status: 'safe' | 'exposed' | 'compromised';
+}
+
+export interface TopologyValidationResult {
+  isValid: boolean;
+  message: string;
+  isolatedNodes: string[];
+}
+
 export enum RoutePaths {
   DASHBOARD = '/',
   BIOMETRICS = '/biometrics',
   THREAT_MAP = '/threats',
+  VERTEX_PIPELINE = '/vertex-pipeline',
   EXECUTIVE = '/executive',
   USER_PORTAL = '/user-portal',
   SYSTEM_TELEMETRY = '/system-telemetry',
   SETTINGS = '/settings',
   DOCUMENTATION = '/docs',
   LICENSE = '/license',
-  CODE_HARDENING = '/code-hardening'
+  CODE_HARDENING = '/code-hardening',
+  CYBER_RANGE = '/cyber-range'
 }
