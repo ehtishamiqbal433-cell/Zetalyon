@@ -1,17 +1,19 @@
 import React, { useState, useEffect } from 'react';
-import { Server, Cpu, HardDrive, Network, ShieldAlert, FileText, Box, Bluetooth, Lock } from 'lucide-react';
+import { Server, Cpu, HardDrive, Network, ShieldAlert, FileText, Box, Bluetooth, Lock, Terminal } from 'lucide-react';
 import { simulationService } from '../services/simulationService.ts';
-import { SystemResource, ComplianceLog, ProximityData } from '../types.ts';
+import { SystemResource, ComplianceLog, ProximityData, ActiveProcessData } from '../types.ts';
 
 export const SystemTelemetry: React.FC = () => {
   const [resources, setResources] = useState<SystemResource>({ cpu: 0, memory: 0, disk: 0, networkTx: 0, networkRx: 0 });
   const [logs, setLogs] = useState<ComplianceLog[]>([]);
   const [proximity, setProximity] = useState<ProximityData>({ linkedDevice: 'iPhone 14 Pro', distanceMeters: 1.2, status: 'secure', connectionType: 'BLE' });
   const [isolationStatus, setIsolationStatus] = useState<'secure' | 'isolating' | 'quarantined'>('secure');
+  const [activeProcesses, setActiveProcesses] = useState<ActiveProcessData[]>([]);
 
   useEffect(() => {
     setResources(simulationService.generateSystemResource());
     setLogs(simulationService.generateComplianceLogs(6));
+    setActiveProcesses(simulationService.generateActiveProcessData());
 
     const interval = setInterval(() => {
       setResources(simulationService.generateSystemResource());
@@ -19,6 +21,10 @@ export const SystemTelemetry: React.FC = () => {
       
       if (Math.random() > 0.7) {
         setLogs(prev => [simulationService.generateComplianceLogs(1)[0], ...prev].slice(0, 10));
+      }
+
+      if (Math.random() > 0.6) {
+        setActiveProcesses(simulationService.generateActiveProcessData());
       }
 
       // Simulate random container isolation/quarantine event
@@ -73,9 +79,64 @@ export const SystemTelemetry: React.FC = () => {
         </div>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        
+        {/* Active Process Monitoring (Desktop/Mobile Hooking) */}
+        <div className="lg:col-span-3 bg-zeta-800 border border-gray-800 rounded-xl p-6 shadow-lg">
+          <div className="flex justify-between items-center mb-4">
+            <h3 className="text-lg font-semibold text-white flex items-center">
+              <Terminal className="mr-2 text-zeta-accent" size={18} />
+              Active Process Monitoring & Telemetry Hooks
+            </h3>
+            <span className="px-2 py-1 bg-zeta-900 border border-gray-700 text-gray-400 text-xs font-mono rounded">
+              Polling Interval: 3s
+            </span>
+          </div>
+          <p className="text-xs text-gray-400 mb-4">
+            Automatically identifies and hooks into active game/application target processes running on Desktop (Windows, macOS) or Mobile (Android, iOS) platforms. Strictly processes telemetry timestamps and timing deltas to preserve privacy compliance.
+          </p>
+          <div className="overflow-x-auto">
+            <table className="w-full text-sm text-left">
+              <thead className="text-xs text-gray-400 uppercase bg-zeta-900 border-b border-gray-800">
+                <tr>
+                  <th className="px-4 py-3 font-mono">Process Name</th>
+                  <th className="px-4 py-3 font-mono">PID</th>
+                  <th className="px-4 py-3 font-mono">Platform</th>
+                  <th className="px-4 py-3 font-mono">Target Status</th>
+                  <th className="px-4 py-3 font-mono">Hook State</th>
+                </tr>
+              </thead>
+              <tbody className="font-mono text-xs">
+                {activeProcesses.map((proc, idx) => (
+                  <tr key={idx} className="border-b border-gray-800/50 hover:bg-zeta-700/30 transition-colors">
+                    <td className="px-4 py-3 text-white font-bold">{proc.processName}</td>
+                    <td className="px-4 py-3 text-gray-400">{proc.pid}</td>
+                    <td className="px-4 py-3 text-blue-400">{proc.platform}</td>
+                    <td className="px-4 py-3">
+                      {proc.isApprovedTarget ? (
+                        <span className="text-zeta-safe">Approved Registry</span>
+                      ) : (
+                        <span className="text-gray-500">Unknown</span>
+                      )}
+                    </td>
+                    <td className="px-4 py-3">
+                      <span className={`px-2 py-1 rounded-full text-[10px] uppercase tracking-wider ${
+                        proc.hookStatus === 'Hooked' ? 'bg-zeta-safe/20 text-zeta-safe' :
+                        proc.hookStatus === 'Scanning' ? 'bg-yellow-500/20 text-yellow-500 animate-pulse' :
+                        'bg-gray-700 text-gray-400'
+                      }`}>
+                        {proc.hookStatus}
+                      </span>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+
         {/* Network-Layer Decoupled Quarantining */}
-        <div className="bg-zeta-800 border border-gray-800 rounded-xl p-6 shadow-lg">
+        <div className="lg:col-span-2 bg-zeta-800 border border-gray-800 rounded-xl p-6 shadow-lg">
           <h3 className="text-lg font-semibold text-white mb-4 flex items-center">
             <Box className="mr-2 text-purple-400" size={18} />
             Network-Layer Decoupled Quarantining
