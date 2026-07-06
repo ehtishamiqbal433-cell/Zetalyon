@@ -114,6 +114,7 @@ export const ExecutiveDashboard: React.FC = () => {
               <div className="flex space-x-4 text-xs font-mono">
                 <span className="flex items-center"><div className="w-3 h-3 bg-zeta-900 border border-gray-700 mr-1"></div> Monitored</span>
                 <span className="flex items-center"><div className="w-3 h-3 bg-zeta-alert/20 border border-zeta-alert mr-1"></div> Active Threat</span>
+                <span className="flex items-center"><div className="w-3 h-3 bg-purple-500/20 border border-purple-500 mr-1"></div> Polymorphic Swap</span>
               </div>
               <button onClick={exportMitreNavigator} className="flex items-center px-3 py-1.5 bg-blue-600/20 text-blue-400 border border-blue-500/50 rounded hover:bg-blue-600/30 transition-colors text-xs font-mono">
                 <Download size={14} className="mr-2" /> Export Navigator JSON
@@ -132,14 +133,20 @@ export const ExecutiveDashboard: React.FC = () => {
                   <div 
                     key={tech.id} 
                     className={`p-3 rounded border text-center transition-all duration-300 flex flex-col justify-center min-h-[80px] ${
-                      tech.active 
-                        ? 'bg-zeta-alert/20 border-zeta-alert animate-pulse shadow-[0_0_15px_rgba(255,0,60,0.3)]' 
-                        : 'bg-zeta-900 border-gray-800 hover:border-gray-600'
+                      tech.status === 'breached' ? 'bg-zeta-alert/20 border-zeta-alert animate-pulse shadow-[0_0_15px_rgba(255,0,60,0.3)]' : 
+                      tech.status === 'mitigated' ? 'bg-zeta-safe/20 border-zeta-safe' :
+                      tech.status === 'polymorphic_swap' ? 'bg-purple-500/20 border-purple-500 animate-pulse shadow-[0_0_15px_rgba(168,85,247,0.3)]' :
+                      'bg-zeta-900 border-gray-800 hover:border-gray-600'
                     }`}
                     title={tech.description}
                   >
-                    <div className={`text-[10px] font-mono mb-1 ${tech.active ? 'text-zeta-alert' : 'text-gray-500'}`}>{tech.id}</div>
-                    <div className={`text-xs font-medium leading-tight ${tech.active ? 'text-white' : 'text-gray-400'}`}>{tech.name}</div>
+                    <div className={`text-[10px] font-mono mb-1 ${
+                      tech.status === 'breached' ? 'text-zeta-alert' : 
+                      tech.status === 'mitigated' ? 'text-zeta-safe' :
+                      tech.status === 'polymorphic_swap' ? 'text-purple-400' :
+                      'text-gray-500'
+                    }`}>{tech.id}</div>
+                    <div className={`text-xs font-medium leading-tight ${tech.status !== 'idle' ? 'text-white' : 'text-gray-400'}`}>{tech.name}</div>
                   </div>
                 ))}
               </div>
@@ -160,13 +167,17 @@ export const ExecutiveDashboard: React.FC = () => {
                     <div className="absolute top-6 left-[11px] w-0.5 h-full bg-gray-800"></div>
                   )}
                   <div className="relative z-10 flex-shrink-0 mr-4">
-                    <div className="w-6 h-6 rounded-full bg-zeta-900 border-2 border-zeta-alert flex items-center justify-center">
-                      <AlertTriangle size={10} className="text-zeta-alert" />
+                    <div className={`w-6 h-6 rounded-full bg-zeta-900 border-2 flex items-center justify-center ${event.isPolymorphicSwap ? 'border-purple-500' : 'border-zeta-alert'}`}>
+                      <AlertTriangle size={10} className={event.isPolymorphicSwap ? 'text-purple-500' : 'text-zeta-alert'} />
                     </div>
                   </div>
                   <div className="bg-zeta-900 border border-gray-800 rounded-lg p-3 flex-1">
                     <div className="flex justify-between items-start mb-1">
-                      <span className="text-xs font-bold text-white">{event.tactic} <span className="text-gray-500 font-normal mx-1">→</span> <span className="text-zeta-alert">{event.techniqueId}: {event.techniqueName}</span></span>
+                      <span className="text-xs font-bold text-white">
+                        {event.tactic} <span className="text-gray-500 font-normal mx-1">→</span> 
+                        <span className={event.isPolymorphicSwap ? 'text-purple-400' : 'text-zeta-alert'}>{event.techniqueId}: {event.techniqueName}</span>
+                        {event.isPolymorphicSwap && <span className="ml-2 text-[8px] bg-purple-500/20 text-purple-400 px-1 rounded uppercase">Polymorphic Swap</span>}
+                      </span>
                       <span className="text-[10px] font-mono text-gray-500">{event.timestamp.toLocaleTimeString()}</span>
                     </div>
                     <p className="text-xs text-gray-400">{event.description}</p>
