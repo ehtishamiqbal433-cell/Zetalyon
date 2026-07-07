@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Shield, Activity, ShieldAlert, BookOpen, Settings, Cpu, TrendingUp, UserCircle, Server, Scale, FileCode, Network, Database } from 'lucide-react';
+import { Shield, Activity, ShieldAlert, BookOpen, Settings, Cpu, TrendingUp, UserCircle, Server, Scale, FileCode, Network, Database, Terminal, Bot } from 'lucide-react';
 import { RoutePaths } from '../types.ts';
 
 interface LayoutProps {
@@ -19,8 +19,10 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
     { path: RoutePaths.VERTEX_PIPELINE, icon: <Database size={20} />, label: 'Vertex AI Pipeline' },
     { path: RoutePaths.CYBER_RANGE, icon: <Network size={20} />, label: 'Cyber Range Sandbox' },
     { path: RoutePaths.SYSTEM_TELEMETRY, icon: <Server size={20} />, label: 'System Telemetry' },
+    { path: RoutePaths.CYBER_GUARDIAN, icon: <Bot size={20} />, label: 'Cyber Guardian AI' },
     { path: RoutePaths.SETTINGS, icon: <Settings size={20} />, label: 'System Config' },
     { path: RoutePaths.CODE_HARDENING, icon: <FileCode size={20} />, label: 'Code Hardening' },
+    { path: RoutePaths.API_PLAYGROUND, icon: <Terminal size={20} />, label: 'API Playground' },
     { path: RoutePaths.DOCUMENTATION, icon: <BookOpen size={20} />, label: 'Documentation' },
     { path: RoutePaths.LICENSE, icon: <Scale size={20} />, label: 'Software IP & License' },
   ];
