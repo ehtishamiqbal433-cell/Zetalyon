@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { ScatterChart, Scatter, XAxis, YAxis, ZAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell, LineChart, Line } from 'recharts';
+import { ScatterChart, Scatter, XAxis, YAxis, ZAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell, LineChart, Line, ReferenceLine } from 'recharts';
 import { Database, Network, RefreshCw, Target, Activity, ShieldAlert, Zap } from 'lucide-react';
 import { simulationService } from '../services/simulationService.ts';
 import { VertexClusterPoint, VertexRetrainingEvent, VertexIngestionMetric } from '../types.ts';
