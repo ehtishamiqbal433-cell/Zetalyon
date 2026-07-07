@@ -13,6 +13,8 @@ import { LicenseView } from './components/LicenseView.tsx';
 import { CodeHardeningView } from './components/CodeHardeningView.tsx';
 import { CyberRangeSandbox } from './components/CyberRangeSandbox.tsx';
 import { VertexAIPipelineView } from './components/VertexAIPipelineView.tsx';
+import { ApiPlaygroundView } from './components/ApiPlaygroundView.tsx';
+import { CyberGuardianView } from './components/CyberGuardianView.tsx';
 import { RoutePaths } from './types.ts';
 
 const App: React.FC = () => {
@@ -31,6 +33,8 @@ const App: React.FC = () => {
           <Route path={RoutePaths.CYBER_RANGE} element={<CyberRangeSandbox />} />
           <Route path={RoutePaths.SETTINGS} element={<SystemConfigView />} />
           <Route path={RoutePaths.CODE_HARDENING} element={<CodeHardeningView />} />
+          <Route path={RoutePaths.API_PLAYGROUND} element={<ApiPlaygroundView />} />
+          <Route path={RoutePaths.CYBER_GUARDIAN} element={<CyberGuardianView />} />
           <Route path={RoutePaths.LICENSE} element={<LicenseView />} />
           <Route path="*" element={<Navigate to={RoutePaths.DASHBOARD} replace />} />
         </Routes>
