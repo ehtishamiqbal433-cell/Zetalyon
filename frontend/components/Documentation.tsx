@@ -1,91 +1,19 @@
 import React from 'react';
-import { Book, Shield, Cpu, Network, Zap, Lock, EyeOff, Layers, Bot, Database, Activity, Fingerprint, Hash, TrendingUp, UserCircle, Server, Mouse, Keyboard, Smartphone, Cloud, Crosshair, AlertTriangle, Download, Sliders, FileCode, BrainCircuit, Terminal, Trash2, Eye, HelpCircle } from 'lucide-react';
+import { Book, Shield, Cpu, Network, Zap, Lock, EyeOff, Layers, Bot, Database, Activity, Fingerprint, Hash, TrendingUp, UserCircle, Server, Mouse, Keyboard, Smartphone, Cloud, Crosshair, AlertTriangle, Download, Sliders, FileCode, BrainCircuit } from 'lucide-react';
 
 export const Documentation: React.FC = () => {
   const features = [
-    {
-      icon: <Smartphone className="text-green-400" size={24} />,
-      title: 'Secure Mobile Network Routing (VpnService/NetworkExtension)',
-      description: 'Initializes native OS network tunneling securely, enforcing TLS 1.3 transport layer encryption and strict certificate pinning. Utilizes Android Keystore / iOS Keychain for session tokens and implements a Kill Switch to prevent cleartext leaks.',
-      technical: 'Routes packets exclusively to a designated, authenticated backend gateway IP/domain. Handles unexpected disconnections or network interface switches gracefully.'
-    },
-    {
-      icon: <Cloud className="text-blue-400" size={24} />,
-      title: 'Cloud Run Deployment & Artifact Registry Pipeline',
-      description: 'Resolves the 10 MiB payload limitation by separating the container build phase (Cloud Build) from the deployment phase. Uses an aggressive `.gcloudignore` manifest and externalizes massive prompt strings to Cloud Storage.',
-      technical: 'Bypasses payload limits by deploying a lightweight container string pointer. Ensures strict IAM isolation for externalized buckets.'
-    },
-    {
-      icon: <HelpCircle className="text-blue-400" size={24} />,
-      title: 'Secure User Support Ingress & Feedback Drawer',
-      description: 'A unified right-hand slide-out configuration panel allowing users and academic reviewers to establish a direct reachability channel. Automatically serializes the active state tree into a detached diagnostic metadata header.',
-      technical: 'Serverless delivery routing pipeline via Cloud Run. Strictly scrubs and sanitizes all typed messages of raw production keys or PII before transmission.'
-    },
-    {
-      icon: <FileCode className="text-green-400" size={24} />,
-      title: 'One-Click Infrastructure as Code (IaC) Export',
-      description: 'Automatically generates and compiles a downloadable ZIP package containing production-ready Terraform scripts (`main.tf`) and Cisco/Fortinet ACL configurations based on the user\'s sandbox session.',
-      technical: 'Backend compilation engine in Cloud Run translates visual topology and typed rules into standard IaC formats.'
-    },
-    {
-      icon: <Network className="text-blue-400" size={24} />,
-      title: 'Automated Network Ingestion (Reverse Mapping)',
-      description: 'Allows IT experts to upload standard network topology configurations (Cisco Running-Config, AWS CloudFormation JSON). The parser programmatically extracts devices and instantly paints the interactive nodes onto the canvas.',
-      technical: 'Regex and JSON parsing engine maps external schemas to internal SandboxNode state arrays.'
-    },
-    {
-      icon: <Shield className="text-purple-400" size={24} />,
-      title: 'Formally Verified Security Policy Matrix',
-      description: 'An automated, formal verification solver (Z3-style) that scans typed firewall rules mathematically for structural human errors, such as shadow rules or open-any configuration leaks, before a simulation runs.',
-      technical: 'Evaluates ACL matrices sequentially to identify unreachable or conflicting rule definitions.'
-    },
-    {
-      icon: <Terminal className="text-zeta-accent" size={24} />,
-      title: 'Live API Schema & OpenAPI Endpoint Playground',
-      description: 'Embeds a live, interactive API documentation browser directly inside the administrative panels. Allows developers to inspect JSON telemetry payload schemas and copy cURL commands.',
-      technical: 'React-based OpenAPI viewer rendering structured endpoint definitions and payload examples.'
-    },
-    {
-      icon: <Eye className="text-blue-400" size={24} />,
-      title: 'Ocular Kinematics & Predictive Trajectory Analysis',
-      description: 'Captures microscopic user behaviors including Spatial-Temporal Mouse Trajectories (Kalman Filtered) and Micro-Saccade & Gaze Jitter Mapping via webcam/eye-tracking ingress.',
-      technical: 'Calculates Jitter Frequency, Jerk Dynamics, and Fixational Gaze Entropy. Raw frames resolve locally into abstract mathematical matrices to preserve privacy.'
-    },
-    {
-      icon: <Crosshair className="text-purple-400" size={24} />,
-      title: 'Polymorphic TTP Behavior Mutation Matrix',
-      description: 'A dynamic behavioral state machine that mimics an active attacker. If an initial vector is blocked, the engine automatically executes a "Mutation Loop" to pivot to a secondary polymorphic technique.',
-      technical: 'Controlled by an "Adversarial Polymorphism Entropy" slider. High entropy randomizes keystroke timings, shuffles protocol headers, and modulates C2 beaconing.'
-    },
-    {
-      icon: <Trash2 className="text-red-400" size={24} />,
-      title: 'Asset Deletion & Contextual Node Swapping',
-      description: 'Supports keyboard excision (Delete/Backspace) and contextual overlay menus to swap asset types mid-design. Automatically scrubs backend state dictionaries and recalculates routing paths to prevent phantom wires.',
-      technical: 'Executes strictly inside local component state handlers, maintaining zero persistent trace indicators for privacy compliance.'
-    },
-    {
-      icon: <Download className="text-blue-400" size={24} />,
-      title: 'Forensic Evidence & Report Export Engine',
-      description: 'Downloads production-grade, audit-ready data packages from the Event Reconstruction Console. Includes Executable Network PCAP files, Audit-Ready PDF Summaries, and CSV Data Streams for SIEM ingestion.',
-      technical: 'Packages files into a Sealed ZIP Archive with a Cryptographic Chain-of-Custody manifest (SHA-256 hashes) to prove evidence integrity.'
-    },
-    {
-      icon: <Network className="text-zeta-accent" size={24} />,
-      title: 'Network Validation Engine (Cyber Range Sandbox)',
-      description: 'An interactive node drafting canvas and "Live Fire" attack simulator. Features a Granular Asset Configuration Panel for text-based ingress of IPs, DNS, and Firewall ACLs. Uses a deterministic routing simulator to validate packet flows.',
-      technical: 'React-based drag-and-drop canvas with SVG connection rendering and BFS-based deterministic packet filtering simulation.'
-    },
-    {
-      icon: <Terminal className="text-zeta-accent" size={24} />,
-      title: 'Active Process Monitoring & Telemetry Hooks',
-      description: 'Automatically identifies and hooks into active game/application target processes running on Desktop (Windows, macOS) or Mobile (Android, iOS) platforms.',
-      technical: 'Uses native platform channels (ps_list, Usage Stats, Custom URL handlers) wrapped in asynchronous low-overhead thread workers. Strictly processes telemetry timestamps and timing deltas to preserve privacy compliance.'
-    },
     {
       icon: <Database className="text-zeta-accent" size={24} />,
       title: 'Vertex AI Context Pipeline (Unsupervised Clustering)',
       description: 'Streaming ingestion pipeline to Vertex AI Feature Store (<50ms latency). Uses HDBSCAN/Isolation Forests to group telemetry into Core, Drift, and Outlier clusters. Features automated real-time model retraining and drift feedback loops.',
       technical: 'Serverless worker pipeline via Cloud Run/Dataflow. Asynchronous Pub/Sub events decouple UI from heavy ML compute cycles.'
+    },
+    {
+      icon: <Network className="text-zeta-accent" size={24} />,
+      title: 'Cyber Range Sandbox Dashboard',
+      description: 'An interactive node drafting canvas and "Live Fire" attack simulator. Serves as an architecture modeling tool for IT experts and a tactical playground for gamers with global leaderboards.',
+      technical: 'React-based drag-and-drop canvas with SVG connection rendering and BFS-based attack path simulation.'
     },
     {
       icon: <BrainCircuit className="text-zeta-accent" size={24} />,
@@ -116,6 +44,12 @@ export const Documentation: React.FC = () => {
       title: 'Real-Time "Deception Morphing" Visualizer',
       description: 'When the user\'s calculated risk score crosses the 0.75 threshold, the app secretly shifts from the production environment to the Generative Honey-Pot UI, visually highlighting synthetic data tables to contain the threat.',
       technical: 'React state-driven UI morphing based on global trust score thresholds.'
+    },
+    {
+      icon: <Download className="text-blue-400" size={24} />,
+      title: 'Complete "Forensic Evidence Package" Exporter',
+      description: 'Compiles an incident response bundle for compromised sessions, including raw telemetry arrays, live threat indicators, and multi-dimensional risk matrices.',
+      technical: 'Generates a pre-formatted JSON/CSV bundle ready for Wireshark, Splunk, or Jupyter Notebooks.'
     },
     {
       icon: <Activity className="text-purple-400" size={24} />,
