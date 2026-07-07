@@ -17,7 +17,7 @@ export interface TrustDataPoint {
 export interface SecurityEvent {
   id: string;
   timestamp: Date;
-  type: 'ANALYSIS' | 'THREAT_BLOCKED' | 'ATTESTATION' | 'SYSTEM' | 'SESSION_INVALIDATED' | 'COMPLIANCE_LOG' | 'FOCUS_LOSS' | 'PERIPHERAL_SHIFT' | 'PROXIMITY_ALERT' | 'SESSION_HANDOVER' | 'PROCESS_HOOK';
+  type: 'ANALYSIS' | 'THREAT_BLOCKED' | 'ATTESTATION' | 'SYSTEM' | 'SESSION_INVALIDATED' | 'COMPLIANCE_LOG' | 'FOCUS_LOSS' | 'PERIPHERAL_SHIFT' | 'PROXIMITY_ALERT' | 'SESSION_HANDOVER';
   message: string;
   severity: 'info' | 'warning' | 'critical';
   module: string;
@@ -36,9 +36,6 @@ export interface TrajectoryPoint {
   kalmanX: number;
   kalmanY: number;
   isAnomalous: boolean;
-  velocity: number;
-  acceleration: number;
-  jerk: number;
 }
 
 export interface CadenceData {
@@ -71,8 +68,6 @@ export interface GazeDataPoint {
   y: number;
   saccadeVelocity: number;
   isAnomalous: boolean;
-  dispersion: number;
-  entropy: number;
 }
 
 export interface TremorData {
@@ -104,7 +99,6 @@ export interface TTPEvent {
   technique: string;
   severity: 'low' | 'medium' | 'high' | 'critical';
   timestamp: Date;
-  isPolymorphicSwap?: boolean;
 }
 
 export interface EntropyData {
@@ -139,7 +133,6 @@ export interface MitreTechnique {
   name: string;
   active: boolean;
   description: string;
-  status: 'idle' | 'mitigated' | 'breached' | 'polymorphic_swap';
 }
 
 export interface MitreTactic {
@@ -155,7 +148,6 @@ export interface AttackTimelineEvent {
   techniqueId: string;
   techniqueName: string;
   description: string;
-  isPolymorphicSwap?: boolean;
 }
 
 export interface LeaderboardEntry {
@@ -231,7 +223,6 @@ export interface MicroPolicyConfig {
   threatMultiplier: number; // 1.0 to 5.0
   frictionDecayRate: number; // 1 to 60 mins
   mfaStrictness: number; // 1, 2, 3
-  adversarialEntropy: number; // 0 to 100
 }
 
 export interface PolicySimulationData {
@@ -251,32 +242,6 @@ export interface PredictiveRiskData {
 
 export type SandboxNodeType = 'Laptop' | 'Server' | 'DB' | 'IoT' | 'Firewall' | 'VPN' | 'ZTAGateway';
 
-export interface FirewallRule {
-  id: string;
-  action: 'ALLOW' | 'DENY';
-  sourceIp: string;
-  destIp: string;
-  port: string;
-  protocol: 'TCP' | 'UDP' | 'ICMP' | 'ANY';
-  isShadowed?: boolean; // Formal Verification Flag
-}
-
-export interface NetworkInterface {
-  id: string;
-  name: string; // e.g., eth0, gigabitethernet0/1
-  ipAddress: string;
-  subnetMask: string;
-  macAddress: string;
-  natRule?: string;
-}
-
-export interface NetworkConfig {
-  primaryDns: string;
-  secondaryDns: string;
-  firewallRules: FirewallRule[];
-  interfaces: NetworkInterface[];
-}
-
 export interface SandboxNode {
   id: string;
   type: SandboxNodeType;
@@ -284,15 +249,12 @@ export interface SandboxNode {
   y: number;
   label: string;
   trustScore: number;
-  config: NetworkConfig;
 }
 
 export interface SandboxConnection {
   id: string;
   from: string;
   to: string;
-  fromInterfaceId?: string;
-  toInterfaceId?: string;
 }
 
 export interface SandboxLeaderboardEntry {
@@ -324,86 +286,6 @@ export interface VertexIngestionMetric {
   throughput: number;
 }
 
-export interface ActiveProcessData {
-  processName: string;
-  pid: number;
-  platform: 'Windows' | 'macOS' | 'Android' | 'iOS';
-  isApprovedTarget: boolean;
-  hookStatus: 'Scanning' | 'Hooked' | 'Detached';
-}
-
-export interface PacketSimulationResult {
-  success: boolean;
-  message: string;
-  failedAtNodeId?: string;
-  failedRule?: string;
-  pathTaken: string[];
-  packetStates: Record<string, 'ALLOW' | 'DENY' | 'STEP_UP'>;
-  polymorphicSwaps: number;
-}
-
-export interface ForensicEvent {
-  id: string;
-  timestamp: Date;
-  track: 'Biometric' | 'Network' | 'ThreatIntel';
-  title: string;
-  description: string;
-  hash: string;
-  previousHash: string;
-  relatedEventIds: string[];
-  isCritical: boolean;
-}
-
-export interface BlastRadiusNode {
-  id: string;
-  label: string;
-  type: SandboxNodeType;
-  status: 'safe' | 'exposed' | 'compromised';
-}
-
-export interface TopologyValidationResult {
-  isValid: boolean;
-  message: string;
-  isolatedNodes: string[];
-}
-
-export interface ApiEndpointSchema {
-  path: string;
-  method: 'GET' | 'POST' | 'PUT' | 'DELETE';
-  description: string;
-  payloadSchema: string;
-  curlExample: string;
-}
-
-export interface SimulationPayload {
-  status: number;
-  data: {
-    forensicTimeline: ForensicEvent[];
-    packetLogs: PacketSimulationResult;
-    complianceMapping: ComplianceLog[];
-    cryptographicSignatures: { file: string, hash: string }[];
-  };
-}
-
-export interface SupportTicket {
-  fullName: string;
-  affiliation: string;
-  email: string;
-  category: string;
-  message: string;
-  diagnosticMetadata: DiagnosticMetadata;
-}
-
-export interface DiagnosticMetadata {
-  currentRoute: string;
-  wizardStep?: number;
-  nodeCount?: number;
-  connectionCount?: number;
-  zoomScale?: number;
-  recentErrors: string[];
-  timestamp: string;
-}
-
 export enum RoutePaths {
   DASHBOARD = '/',
   BIOMETRICS = '/biometrics',
@@ -416,7 +298,5 @@ export enum RoutePaths {
   DOCUMENTATION = '/docs',
   LICENSE = '/license',
   CODE_HARDENING = '/code-hardening',
-  CYBER_RANGE = '/cyber-range',
-  API_PLAYGROUND = '/api-playground',
-  DEPLOYMENT = '/deployment'
+  CYBER_RANGE = '/cyber-range'
 }
