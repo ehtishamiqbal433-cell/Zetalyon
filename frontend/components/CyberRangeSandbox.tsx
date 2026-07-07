@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect, useCallback } from 'react';
-import { Server, Laptop, Database, Shield, Network, Lock, Play, AlertTriangle, CheckCircle, Award, Activity, ChevronRight, ChevronLeft, Box, ShieldAlert, Crosshair, Zap, Settings, Plus, Trash2, X, RefreshCw, Download, Link as LinkIcon, MoreVertical, UploadCloud, FileCode, Loader2, Move, Menu } from 'lucide-react';
+import { Server, Laptop, Database, Shield, Network, Lock, Play, AlertTriangle, CheckCircle, Award, Activity, ChevronRight, ChevronLeft, Box, ShieldAlert, Crosshair, Zap, Settings, Plus, Trash2, X, RefreshCw, Download, Link as LinkIcon, MoreVertical, UploadCloud, FileCode, Loader2, Move } from 'lucide-react';
 import { SandboxNode, SandboxNodeType, SandboxConnection, SandboxLeaderboardEntry, FirewallRule, NetworkConfig, ForensicEvent, BlastRadiusNode, PacketSimulationResult, SimulationPayload } from '../types.ts';
 import { simulationService } from '../services/simulationService.ts';
 
@@ -57,17 +57,6 @@ export const CyberRangeSandbox: React.FC = () => {
   const [blastRadius, setBlastRadius] = useState<{nodes: BlastRadiusNode[], edges: {from: string, to: string}[]}>({nodes: [], edges: []});
   const [leaderboard, setLeaderboard] = useState<SandboxLeaderboardEntry[]>([]);
 
-  // Mobile Layout State
-  const [isMobile, setIsMobile] = useState(false);
-  const [isShelfOpen, setIsShelfOpen] = useState(false);
-
-  useEffect(() => {
-    const checkMobile = () => setIsMobile(window.innerWidth < 768);
-    checkMobile();
-    window.addEventListener('resize', checkMobile);
-    return () => window.removeEventListener('resize', checkMobile);
-  }, []);
-
   useEffect(() => {
     setForensicEvents(simulationService.generateForensicTimeline());
     setLeaderboard(simulationService.generateSandboxLeaderboard());
@@ -119,7 +108,6 @@ export const CyberRangeSandbox: React.FC = () => {
   }, [selectedNodeId, selectedConnectionId, currentStep, nodes, connections]);
 
   const deleteNode = (nodeId: string) => {
-    // Cascading Deletion Cleanup
     setNodes(prev => prev.filter(n => n.id !== nodeId));
     setConnections(prev => prev.filter(c => c.from !== nodeId && c.to !== nodeId));
     if (selectedNodeId === nodeId) setSelectedNodeId(null);
@@ -258,7 +246,6 @@ export const CyberRangeSandbox: React.FC = () => {
     if (currentStep !== 1) return;
     setDraggingNodeType(type);
     e.dataTransfer.effectAllowed = 'copy';
-    if (isMobile) setIsShelfOpen(false); // Close drawer on mobile when dragging starts
   };
 
   const handleCanvasDrop = (e: React.DragEvent) => {
@@ -378,10 +365,7 @@ export const CyberRangeSandbox: React.FC = () => {
     }
 
     if (movingNodeId) {
-      // Constrain node movement within canvas bounds
-      const newX = Math.max(0, Math.min(x - 40, rect.width - 80));
-      const newY = Math.max(0, Math.min(y - 40, rect.height - 80));
-      setNodes(nodes.map(n => n.id === movingNodeId ? { ...n, x: newX, y: newY } : n));
+      setNodes(nodes.map(n => n.id === movingNodeId ? { ...n, x: x - 40, y: y - 40 } : n));
     }
   };
 
@@ -574,11 +558,6 @@ export const CyberRangeSandbox: React.FC = () => {
           <p className="text-gray-400 mt-1">Stateful Network Emulation & Formal Verification Core.</p>
         </div>
         <div className="flex space-x-4">
-          {isMobile && currentStep === 1 && (
-            <button onClick={() => setIsShelfOpen(!isShelfOpen)} className="px-4 py-2 bg-zeta-800 border border-gray-700 text-gray-300 rounded-lg hover:bg-zeta-700 transition-colors text-sm font-mono flex items-center">
-              <Menu size={16} className="mr-2" /> Assets
-            </button>
-          )}
           <button onClick={clearCanvas} className="px-4 py-2 bg-zeta-800 border border-gray-700 text-gray-300 rounded-lg hover:bg-zeta-700 transition-colors text-sm font-mono flex items-center">
             <RefreshCw size={16} className="mr-2" /> Reset Range
           </button>
@@ -586,13 +565,13 @@ export const CyberRangeSandbox: React.FC = () => {
       </header>
 
       {/* Multi-Step Wizard Navigation Layout */}
-      <div className="flex items-center justify-between mb-6 bg-zeta-800 p-4 rounded-xl border border-gray-800 shadow-lg flex-shrink-0 overflow-x-auto">
+      <div className="flex items-center justify-between mb-6 bg-zeta-800 p-4 rounded-xl border border-gray-800 shadow-lg flex-shrink-0">
         {stepLabels.map((label, index) => {
           const stepNum = index + 1;
           const isActive = currentStep === stepNum;
           const isPast = currentStep > stepNum || completedSteps.includes(stepNum);
           return (
-            <div key={stepNum} className="flex items-center flex-1 last:flex-none min-w-max">
+            <div key={stepNum} className="flex items-center flex-1 last:flex-none">
               <div className={`flex items-center justify-center w-10 h-10 rounded-full font-bold text-sm transition-all duration-300 ${
                 isActive ? 'bg-zeta-accent text-zeta-900 shadow-[0_0_15px_rgba(0,240,255,0.6)] scale-110' :
                 isPast ? 'bg-zeta-safe text-zeta-900' :
@@ -621,21 +600,12 @@ export const CyberRangeSandbox: React.FC = () => {
         <div className="flex-1 flex gap-6 min-h-0 relative">
           
           {/* Left Panel: Asset Shelf (Only active in Step 1) */}
-          <div className={`
-            ${isMobile ? 'fixed inset-y-0 left-0 z-50 w-72 transform transition-transform duration-300 ease-in-out' : 'w-[320px] flex-shrink-0 transition-all duration-300'}
-            ${isMobile && !isShelfOpen ? '-translate-x-full' : 'translate-x-0'}
-            ${!isMobile && currentStep !== 1 ? 'opacity-50 pointer-events-none -translate-x-4 hidden' : 'opacity-100'}
-            bg-zeta-800 border border-gray-800 rounded-xl p-5 flex flex-col shadow-lg overflow-hidden
-          `}>
+          <div className={`w-[320px] flex-shrink-0 bg-zeta-800 border border-gray-800 rounded-xl p-5 flex flex-col shadow-lg overflow-hidden transition-all duration-300 ${currentStep === 1 ? 'opacity-100 translate-x-0' : 'opacity-50 pointer-events-none -translate-x-4 hidden'}`}>
             <div className="flex items-center justify-between mb-4 border-b border-gray-700 pb-3 flex-shrink-0">
               <h3 className="text-sm font-bold text-white uppercase tracking-wider flex items-center">
                 <Box size={16} className="mr-2 text-zeta-accent" /> Asset Shelf
               </h3>
-              {isMobile ? (
-                <button onClick={() => setIsShelfOpen(false)} className="text-gray-400 hover:text-white"><X size={16}/></button>
-              ) : (
-                <span className="text-[10px] bg-zeta-900 px-2 py-1 rounded text-gray-400 font-mono">Drag to deploy</span>
-              )}
+              <span className="text-[10px] bg-zeta-900 px-2 py-1 rounded text-gray-400 font-mono">Drag to deploy</span>
             </div>
             
             {/* Two-Column Dynamic Grid Flow with Scroll Overrides */}
@@ -916,7 +886,7 @@ export const CyberRangeSandbox: React.FC = () => {
                 <ChevronLeft size={18} className="mr-2" /> Previous Phase
               </button>
               
-              <div className="text-sm font-mono text-gray-400 text-center flex-1 px-4 hidden md:block">
+              <div className="text-sm font-mono text-gray-400 text-center flex-1 px-4">
                 {currentStep === 1 && "Drag nodes from the shelf to construct your architecture. Drag from port handles to connect."}
                 {currentStep === 2 && "Click a node or connection to configure Network Settings (IP/DNS)."}
                 {currentStep === 3 && "Click a Firewall or Gateway to define ACL rules."}
@@ -938,10 +908,7 @@ export const CyberRangeSandbox: React.FC = () => {
           </div>
 
           {/* Right Panel: Dynamic Content based on Step */}
-          <div className={`
-            ${isMobile ? 'fixed inset-y-0 right-0 z-50 w-80 transform transition-transform duration-300 ease-in-out' : 'w-96 flex flex-col gap-6 overflow-y-auto'}
-            ${isMobile && (currentStep === 1 || currentStep === 5) ? 'translate-x-full' : 'translate-x-0'}
-          `}>
+          <div className="w-96 flex flex-col gap-6 overflow-y-auto">
             
             {/* Granular Asset Configuration Panel (Active in Step 2 & 3) */}
             {(currentStep === 2 || currentStep === 3) && (
@@ -1264,7 +1231,7 @@ export const CyberRangeSandbox: React.FC = () => {
                               {event.isCritical && <AlertTriangle size={12} className="text-zeta-alert" />}
                             </div>
                             <div className={`text-sm font-bold mb-1 ${event.isCritical ? 'text-zeta-alert' : 'text-white'}`}>{event.title}</div>
-                            <div className="text-xs text-gray-400 mb-3 break-words whitespace-pre-wrap">{event.description}</div>
+                            <div className="text-xs text-gray-400 mb-3">{event.description}</div>
                             
                             {/* CoC Hash Badge */}
                             <div className="flex items-center justify-between bg-gray-900 p-1.5 rounded border border-gray-800">
