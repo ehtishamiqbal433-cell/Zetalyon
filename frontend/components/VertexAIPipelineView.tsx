@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { ScatterChart, Scatter, XAxis, YAxis, ZAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell, LineChart, Line, ReferenceLine } from 'recharts';
+import { ScatterChart, Scatter, XAxis, YAxis, ZAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell, LineChart, Line } from 'recharts';
 import { Database, Network, RefreshCw, Target, Activity, ShieldAlert, Zap } from 'lucide-react';
 import { simulationService } from '../services/simulationService.ts';
 import { VertexClusterPoint, VertexRetrainingEvent, VertexIngestionMetric } from '../types.ts';
@@ -120,8 +120,8 @@ export const VertexAIPipelineView: React.FC = () => {
             <ResponsiveContainer width="100%" height="100%">
               <ScatterChart margin={{ top: 10, right: 10, bottom: 10, left: -20 }}>
                 <CartesianGrid strokeDasharray="3 3" stroke="#1f2937" />
-                <XAxis type="number" dataKey="x" name="Feature Dim 1" stroke="#4b5563" fontSize={12} tick={{ fill: '#9ca3af' }} />
-                <YAxis type="number" dataKey="y" name="Feature Dim 2" stroke="#4b5563" fontSize={12} tick={{ fill: '#9ca3af' }} />
+                <XAxis type="number" dataKey="x" name="Feature Dim 1" stroke="#4b5563" fontSize={12} tick={false} />
+                <YAxis type="number" dataKey="y" name="Feature Dim 2" stroke="#4b5563" fontSize={12} tick={false} />
                 <ZAxis type="number" dataKey="z" range={[20, 200]} name="Feature Dim 3" />
                 <Tooltip cursor={{ strokeDasharray: '3 3' }} contentStyle={{ backgroundColor: '#111827', borderColor: '#374151', color: '#fff' }} />
                 <Scatter name="Telemetry" data={clusterPoints} animationDuration={500}>
@@ -176,8 +176,8 @@ export const VertexAIPipelineView: React.FC = () => {
             <ResponsiveContainer width="100%" height="100%">
               <LineChart data={ingestionMetrics} margin={{ top: 5, right: 5, left: -20, bottom: 5 }}>
                 <CartesianGrid strokeDasharray="3 3" stroke="#1f2937" vertical={false} />
-                <XAxis dataKey="time" stroke="#4b5563" fontSize={12} tick={{ fill: '#9ca3af' }} />
-                <YAxis stroke="#4b5563" fontSize={12} domain={[0, 100]} label={{ value: 'ms', angle: -90, position: 'insideLeft', fill: '#4b5563' }} tick={{ fill: '#9ca3af' }} />
+                <XAxis dataKey="time" stroke="#4b5563" fontSize={12} tick={false} />
+                <YAxis stroke="#4b5563" fontSize={12} domain={[0, 100]} label={{ value: 'ms', angle: -90, position: 'insideLeft', fill: '#4b5563' }} />
                 <Tooltip contentStyle={{ backgroundColor: '#111827', borderColor: '#374151', color: '#fff' }} />
                 <ReferenceLine y={50} stroke="#ff003c" strokeDasharray="3 3" label={{ position: 'insideTopLeft', value: '50ms SLA', fill: '#ff003c', fontSize: 10 }} />
                 <Line type="monotone" dataKey="latencyMs" name="Latency (ms)" stroke="#00f0ff" strokeWidth={2} dot={false} isAnimationActive={false} />
