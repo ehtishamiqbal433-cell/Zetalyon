@@ -1,0 +1,25 @@
+{
+  "name": "ZETALYON OS - Zero-Trust Dev Environment",
+  "image": "mcr.microsoft.com/devcontainers/base:ubuntu-22.04",
+  "customizations": {
+    "vscode": {
+      "settings": {
+        "liveServer.settings.donotShowInfoMsg": true,
+        "liveServer.settings.port": 5500
+      },
+      "extensions": [
+        "ritwickdey.LiveServer",
+        "tailwindCSS.vscode-tailwindcss",
+        "dbaeumer.vscode-eslint"
+      ]
+    }
+  },
+  "forwardPorts": [5500],
+  "portsAttributes": {
+    "5500": {
+      "label": "ZETALYON Web Dashboard",
+      "onAutoForward": "openBrowser"
+    }
+  },
+  "postCreateCommand": "npm install -g live-server"
+}
