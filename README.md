@@ -1,53 +1,17 @@
-# Vertex AI Studio Frontend App with Node.js Backend
+# 🛡️ ZETALYON OS — Zero-Trust Behavioral Framework
 
-This repository contains a frontend and a Node.js backend, designed to run together.
-The backend acts as a proxy, handling Google Cloud API calls.
+[![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/ehtishamiqbal433-cell/Zetalyon?quickstart=1)
+[![Active Environment](https://img.shields.io/badge/Manage-Codespaces-blue?logo=github)](https://github.com/codespaces)
 
-This project is intended for demonstration and prototyping purposes only.
-It is not intended for use in a production environment.
+ZETALYON OS is a continuous behavioral attestation framework designed for continuous identity validation, telemetry stream processing, and zero-trust perimeter control.
 
-## Prerequisites
+## 📁 Interface Modules
 
-To run this application locally, you need:
+- 🧬 [**Biometric Engine**](./public/biometric_engine.html) — Mouse trajectory, gaze stability, and micro-saccades analysis.
+- 🛡️ **Command Center** — Real-time isolation controls and ingress threat monitoring.
+- 🤖 **Vertex AI Pipeline** — ML model baseline calculation and continuous anomaly detection.
 
-*   **[Google Cloud SDK / gcloud CLI](https://cloud.google.com/sdk/docs/install)**: Follow the instructions to install the SDK.
+## 🛠️ Quick Start in Codespaces
 
-*   **gcloud Initialization**:
-    *   Initialize the gcloud CLI:
-        ```bash
-        gcloud init
-        ```
-    *   Authenticate for Application Default Credentials (needed to call Google Cloud APIs):
-        ```bash
-        gcloud auth application-default login
-        ```
-
-*   **Node.js and npm**: Ensure you have Node.js and its package manager, `npm`, installed on your machine.
-
-## Project Structure
-
-The project is organized into two main directories:
-
-*   `frontend/`: Contains the Frontend application code.
-*   `backend/`: Contains the Node.js/Express server code to proxy Google Cloud API calls.
-
-## Backend Environment Variables
-
-The `backend/.env.local` file is automatically generated when you download this application.
-It contains essential Google Cloud environment variables pre-configured based on your project settings at the time of download.
-
-The variables set in `backend/.env.local` are:
-*   `API_BACKEND_PORT`: The port the backend API server listens on (e.g., `5000`).
-*   `API_PAYLOAD_MAX_SIZE`: The maximum size of the request payload accepted by the backend server (e.g., `5mb`).
-*   `GOOGLE_CLOUD_LOCATION`: The Google Cloud region associated with your project.
-*   `GOOGLE_CLOUD_PROJECT`: Your Google Cloud Project ID.
-
-**Note:** These variables are automatically populated during the download process.
-You can modify the values in `backend/.env.local` if you need to change them.
-
-## Installation and Running the App
-
-To install dependencies and run your Google Cloud Vertex AI Studio App locally, execute the following command:
-
-```bash
-npm install && npm run dev
+1. Launch via the **Open in GitHub Codespaces** badge above.
+2. Port `5500` will auto-forward to preview the dashboard.
