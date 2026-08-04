@@ -1,0 +1,23 @@
+# Frontend UI & Public Assets
+frontend:
+  - changed-files:
+      - any-glob-to-any-file: 'public/**/*'
+
+# Core Python Backend & MLOps Ingestion Engine
+backend:
+  - changed-files:
+      - any-glob-to-any-file: 'src/**/*'
+
+# Architecture & Specification Docs
+documentation:
+  - changed-files:
+      - any-glob-to-any-file:
+          - 'README.md'
+          - 'docs/**/*'
+
+# CI/CD & Developer Environment Configs
+ci-cd:
+  - changed-files:
+      - any-glob-to-any-file:
+          - '.github/**/*'
+          - '.devcontainer/**/*'
