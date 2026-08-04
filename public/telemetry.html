@@ -1,19 +1,20 @@
 <!DOCTYPE html>
 <html class="dark" lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>ZETALYON OS - telemetry</title>
-    <style>
-        body { background: #0d1515; color: #00dbe9; font-family: monospace; display: flex; align-items: center; justify-content: center; height: 100vh; margin: 0; }
-        .card { border: 1px solid #00dbe9; padding: 2rem; border-radius: 8px; text-align: center; }
-        a { color: #6bff83; text-decoration: none; display: inline-block; margin-top: 1rem; }
-    </style>
+    <meta charset="utf-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Zetalyon | System Telemetry</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet"/>
 </head>
-<body>
-    <div class="card">
-        <h2>MODULE: telemetry.html</h2>
-        <p>STATUS: ACTIVE / INITIALIZING DATA STREAM</p>
-        <a href="/biometric_engine.html">&larr; Return to Biometric Engine</a>
+<body class="bg-[#0d1515] text-[#dce4e5] font-['JetBrains_Mono'] p-8">
+    <header class="border-b border-[#3b494b] pb-4 mb-6 flex justify-between items-center">
+        <h1 class="text-2xl font-bold text-[#00f0ff]">MODULE: SYSTEM_TELEMETRY</h1>
+        <a href="/biometric_engine.html" class="text-[#6bff83] hover:underline">&larr; Back to Biometric Engine</a>
+    </header>
+    <div class="bg-[#151d1e] border border-[#3b494b] p-6 rounded">
+        <h2 class="text-[#00dbe9] font-bold mb-2">LIVE STREAMING METRICS</h2>
+        <p class="text-sm text-[#849495]">Ingestion Rate: 1,420 events/sec</p>
+        <p class="text-sm text-[#849495]">Average Latency: 4ms</p>
     </div>
 </body>
 </html>
