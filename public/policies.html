@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Zetalyon | Zero-Trust Policy Builder</title>
+    <style>
+        :root {
+            --bg-dark: #0a0e17;
+            --card-bg: #111827;
+            --accent-cyan: #00f0ff;
+            --accent-green: #00fa64;
+            --accent-amber: #ffb700;
+            --accent-red: #ff3366;
+            --text-main: #f3f4f6;
+            --border-color: #1f2937;
+        }
+
+        body {
+            margin: 0;
+            padding: 24px;
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 16px;
+            margin-bottom: 24px;
+        }
+
+        .nav-links a {
+            color: #9ca3af;
+            text-decoration: none;
+            margin-left: 16px;
+            font-weight: 600;
+        }
+
+        .nav-links a.active, .nav-links a:hover {
+            color: var(--accent-cyan);
+        }
+
+        .card {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 24px;
+            margin-bottom: 24px;
+        }
+
+        .policy-rule {
+            display: grid;
+            grid-template-columns: 1fr 2fr 1fr;
+            align-items: center;
+            padding: 16px;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            margin-bottom: 12px;
+            background: rgba(0,0,0,0.2);
+        }
+
+        .slider-container {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        input[type=range] {
+            flex-grow: 1;
+            accent-color: var(--accent-cyan);
+        }
+
+        .badge-status {
+            font-weight: bold;
+            padding: 6px 12px;
+            border-radius: 4px;
+            text-align: center;
+        }
+
+        .status-allow { background: rgba(0, 250, 100, 0.15); color: var(--accent-green); border: 1px solid var(--accent-green); }
+        .status-mfa { background: rgba(255, 183, 0, 0.15); color: var(--accent-amber); border: 1px solid var(--accent-amber); }
+        .status-deny { background: rgba(255, 51, 102, 0.15); color: var(--accent-red); border: 1px solid var(--accent-red); }
+
+        button {
+            background: var(--accent-cyan);
+            color: #000;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <h1 style="color: var(--accent-cyan); margin:0;">ZETALYON | Policy Engine</h1>
+        <div class="nav-links">
+            <a href="biometric_engine.html">Telemetry Engine</a>
+            <a href="policies.html" class="active">Policies</a>
+            <a href="audit_logs.html">Audit Logs</a>
+        </div>
+    </div>
+
+    <div class="card">
+        <h2>Continuous Attestation Threshold Matrix</h2>
+        <p style="color: #9ca3af;">Configure score boundaries to enforce real-time session step-up MFA or immediate termination (NIST SP 800-207).</p>
+        
+        <div class="policy-rule">
+            <div><strong>High Trust (ALLOW)</strong></div>
+            <div class="slider-container">
+                <span>Score &ge;</span>
+                <input type="range" id="allowSlider" min="0.70" max="0.95" step="0.05" value="0.85" oninput="updateValues()">
+                <span id="allowValue">0.85</span>
+            </div>
+            <div class="badge-status status-allow">GRANT ACCESS</div>
+        </div>
+
+        <div class="policy-rule">
+            <div><strong>Medium Trust (STEP-UP)</strong></div>
+            <div class="slider-container">
+                <span>Score &ge;</span>
+                <input type="range" id="mfaSlider" min="0.40" max="0.69" step="0.05" value="0.60" oninput="updateValues()">
+                <span id="mfaValue">0.60</span>
+            </div>
+            <div class="badge-status status-mfa">PROMPT FIDO2 / WEBAUTHN</div>
+        </div>
+
+        <div class="policy-rule">
+            <div><strong>Low Trust (TERMINATE)</strong></div>
+            <div class="slider-container">
+                <span>Score &lt;</span>
+                <span id="denyValue">0.60</span>
+            </div>
+            <div class="badge-status status-deny">REVOKE SESSION TOKEN</div>
+        </div>
+
+        <button onclick="savePolicies()">Apply Policy Configuration</button>
+    </div>
+
+    <script>
+        function updateValues() {
+            const allowVal = document.getElementById('allowSlider').value;
+            const mfaVal = document.getElementById('mfaSlider').value;
+            
+            document.getElementById('allowValue').innerText = allowVal;
+            document.getElementById('mfaValue').innerText = mfaVal;
+            document.getElementById('denyValue').innerText = mfaVal;
+        }
+
+        function savePolicies() {
+            alert('Zero-Trust Policies Updated & Dispatched to Ingest Pipeline!');
+        }
+    </script>
+</body>
+</html>
